@@ -31,6 +31,10 @@ module.exports = {
   extra: {
     // Access environment variables
     EXPO_PUBLIC_GROQ_API_KEY: process.env.EXPO_PUBLIC_GROQ_API_KEY,
+    EXPO_PUBLIC_OCR_API_KEY: process.env.EXPO_PUBLIC_OCR_API_KEY,
+    eas: {
+      projectId: "4953fea8-325d-4263-97d2-f3aaee742624"
+    }
   },
   plugins: [
     "expo-router",
