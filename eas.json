@@ -11,7 +11,12 @@
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "EXPO_PUBLIC_GROQ_API_KEY": "your_groq_api_key_here",
+          "EXPO_PUBLIC_OCR_API_KEY": "your_ocr_api_key_here"
+        }
       }
     },
     "production": {
@@ -19,7 +24,12 @@
     },
     "release": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "EXPO_PUBLIC_GROQ_API_KEY": "your_groq_api_key_here",
+          "EXPO_PUBLIC_OCR_API_KEY": "your_ocr_api_key_here"
+        }
       },
       "distribution": "internal"
     }

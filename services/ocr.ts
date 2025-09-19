@@ -66,7 +66,7 @@ async function imageToBase64(imageUri: string): Promise<string> {
 async function performOCRSpaceAPI(base64Image: string, options: OCROptions = {}): Promise<string> {
   try {
     // Access API key from environment - Expo automatically loads .env variables with EXPO_PUBLIC_ prefix
-    const apiKey = 'K87765209888957'; // Direct API key as fallback
+    const apiKey = process.env.EXPO_PUBLIC_OCR_API_KEY || 'K87765209888957'; // Fallback to demo key
     
     console.log('Calling OCR.space API with Engine 2...');
     

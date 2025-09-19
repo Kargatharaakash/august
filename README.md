@@ -116,7 +116,7 @@ A React Native Expo mobile application for health assistance featuring a chat in
      EXPO_PUBLIC_OCR_API_KEY=your_actual_ocr_space_api_key_here
      ```
 
-> **Important**: For demo purposes, the app includes mock implementations for the OCR functionality, so you can test the app without setting up OCR.space API.
+> **Important**: For demo purposes, the app includes a fallback API key for OCR functionality, but it's recommended to use your own API keys for production usage.
 
 ### Running the App
 
@@ -144,22 +144,60 @@ yarn web
 
 ## Building for Production
 
+### Prerequisites for EAS Builds
+- Expo Account (create at https://expo.dev/)
+- EAS CLI installed (`npm install -g eas-cli`)
+- Logged in to EAS (`eas login`)
+
+### First-time EAS Setup
+1. Run `eas login` to log in to your Expo account
+2. Run `eas build --platform android --profile release` to start the build
+3. When prompted, confirm creating a new EAS project
+4. When prompted, confirm generating a new Android Keystore (for new projects)
+5. Wait for the build to complete
+
+### Building APK for Direct Distribution
+To generate an APK file that can be sent directly to someone (not for store distribution):
+
+```bash
+# Build APK for direct distribution
+eas build --platform android --profile release
+
+# Build APK for preview/testing
+eas build --platform android --profile preview
+```
+
+The build will generate an APK file that can be downloaded and installed directly on Android devices without going through the Google Play Store.
+
+### EAS Configuration Profiles
+- **preview**: Generates an APK for testing and direct distribution
+- **release**: Generates an APK for direct distribution (internal)
+- **production**: Generates an App Bundle for Google Play Store submission
+
 ### Android
 
 ```bash
-# Build for Android using EAS
-npm run build:android
-# or
-yarn build:android
+# Build for Android using EAS (requires Expo account)
+eas build --platform android --profile release
+
+# Build for Android with development profile
+eas build --platform android --profile development
+
+# Build for Android with preview profile
+eas build --platform android --profile preview
 ```
 
 ### iOS
 
 ```bash
-# Build for iOS using EAS
-npm run build:ios
-# or
-yarn build:ios
+# Build for iOS using EAS (requires Expo account and Apple Developer account)
+eas build --platform ios --profile release
+
+# Build for iOS with development profile
+eas build --platform ios --profile development
+
+# Build for iOS with preview profile
+eas build --platform ios --profile preview
 ```
 
 ### Web
@@ -170,6 +208,20 @@ npm run build:web
 # or
 yarn build:web
 ```
+
+## EAS Configuration
+
+The project uses EAS (Expo Application Services) for building and deploying mobile apps:
+
+- **Development**: For internal testing with development client
+- **Preview**: For internal distribution (TestFlight/App Store Connect)
+- **Production**: For App Store/Google Play distribution
+- **Release**: For direct store distribution with app bundle generation
+
+To set up EAS for the first time:
+1. Run `eas login` to log in to your Expo account
+2. Run `eas build --platform android --profile release` to start the build
+3. Follow the prompts to configure the EAS project if needed
 
 ## License
 
