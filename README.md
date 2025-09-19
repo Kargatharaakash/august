@@ -126,55 +126,28 @@ npm run dev
 # or
 yarn dev
 
-# Run on iOS
+# Run on iOS simulator
 npm run ios
 # or
 yarn ios
 
-# Run on Android
+# Run on Android emulator
 npm run android
 # or
 yarn android
+
+# Run on web browser
+npm run web
+# or
+yarn web
 ```
-
-## Key Improvements & Customizations
-
-### Onboarding Experience
-- Clean, consistent UI with no unnecessary elements
-- Progress indicators showing current screen
-- Responsive design for all device sizes
-- Proper navigation flow (Continue takes to next screen, Start Using takes to home)
-
-### Wellness Screen
-- Smooth card swiping functionality with proper gesture handling
-- Stack effect showing next card behind current one
-- Visual feedback during swiping with rotation and scaling
-- Fallback to mock data when API is unavailable
-
-### Splash Screen
-- Custom image-based splash screen with brand colors
-- Smooth animation on app launch
-
-### User Personalization
-- User name changed from "Aakash" to "Raj" throughout the app
-
-## Project Structure
-
-- **app/**: Main application code with Expo Router structure
-  - **(tabs)/**: Tab-based navigation components
-- **assets/**: Images and static resources
-- **components/**: Reusable UI components
-- **constants/**: Design system constants (Colors, Typography, Spacing)
-- **services/**: API and functionality services (Groq LLM, OCR, Storage)
-- **hooks/**: Custom React hooks
-- **types/**: TypeScript type definitions
-- **utils/**: Helper functions and utilities
 
 ## Building for Production
 
 ### Android
 
 ```bash
+# Build for Android using EAS
 npm run build:android
 # or
 yarn build:android
@@ -183,6 +156,7 @@ yarn build:android
 ### iOS
 
 ```bash
+# Build for iOS using EAS
 npm run build:ios
 # or
 yarn build:ios
@@ -191,6 +165,7 @@ yarn build:ios
 ### Web
 
 ```bash
+# Export for web deployment
 npm run build:web
 # or
 yarn build:web
