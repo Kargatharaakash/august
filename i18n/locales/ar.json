@@ -1,0 +1,40 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "share": "مشاركة",
+    "copy": "نسخ",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "done": "تم",
+    "retry": "إعادة المحاولة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "notifications": "الإشعارات"
+  },
+  "home": {
+    "greeting": "مرحباً {{name}}،",
+    "question": "كيف يمكنني مساعدتك اليوم؟",
+    "searchPlaceholder": "اسأل August ...",
+    "aiChat": "دردشة الذكي",
+    "prescription": "وصفة طبية",
+    "wellness": "العافية",
+    "records": "السجلات"
+  },
+  "chat": {
+    "title": "دردشة",
+    "inputPlaceholder": "رسالة إلى August...",
+    "welcome": "مرحباً! أنا August، مساعدك الصحي الذكي. كيف يمكنني مساعدتك اليوم؟",
+    "thinking": "أفكر...",
+    "sent": "تم الإرسال",
+    "received": "تم الاستلام"
+  }
+}

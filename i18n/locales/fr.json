@@ -1,0 +1,40 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "share": "Partager",
+    "copy": "Copier",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "done": "Terminé",
+    "retry": "Réessayer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "settings": "Paramètres",
+    "profile": "Profil",
+    "notifications": "Notifications"
+  },
+  "home": {
+    "greeting": "Salut {{name}},",
+    "question": "Comment puis-je vous aider aujourd'hui?",
+    "searchPlaceholder": "Demandez à August ...",
+    "aiChat": "Chat IA",
+    "prescription": "Ordonnance",
+    "wellness": "Bien-être",
+    "records": "Dossiers"
+  },
+  "chat": {
+    "title": "Chat",
+    "inputPlaceholder": "Message à August...",
+    "welcome": "Bonjour! Je suis August, votre assistant santé IA. Comment puis-je vous aider aujourd'hui?",
+    "thinking": "Réflexion...",
+    "sent": "Envoyé",
+    "received": "Reçu"
+  }
+}
