@@ -15,7 +15,10 @@ import {
   Animated,
   Keyboard,
   Alert,
+  Easing,
+  Dimensions,
 } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Clipboard from 'expo-clipboard';
 import { useTranslation } from 'react-i18next';
@@ -53,7 +56,8 @@ export default function ChatScreen() {
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error'} | null>(null);
   const [chatHistory, setChatHistory] = useState<Chat[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
-  
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   const currentLanguage = i18n.language;
   const styles = getStyles(theme);
   
@@ -62,6 +66,66 @@ export default function ChatScreen() {
   const typingAnimation = useRef<NodeJS.Timeout | null>(null);
   const notificationAnimatedValue = useRef(new Animated.Value(-100)).current;
   const sidebarAnimatedValue = useRef(new Animated.Value(-300)).current;
+  const dot1Animation = useRef(new Animated.Value(0)).current;
+  const dot2Animation = useRef(new Animated.Value(0)).current;
+  const dot3Animation = useRef(new Animated.Value(0)).current;
+
+  // Animate typing dots
+  useEffect(() => {
+    const animateDots = () => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.parallel([
+            Animated.timing(dot1Animation, {
+              toValue: 1,
+              duration: 400,
+              useNativeDriver: true,
+            }),
+            Animated.timing(dot2Animation, {
+              toValue: 1,
+              duration: 400,
+              useNativeDriver: true,
+              delay: 200,
+            }),
+            Animated.timing(dot3Animation, {
+              toValue: 1,
+              duration: 400,
+              useNativeDriver: true,
+              delay: 400,
+            }),
+          ]),
+          Animated.parallel([
+            Animated.timing(dot1Animation, {
+              toValue: 0,
+              duration: 400,
+              useNativeDriver: true,
+              delay: 600,
+            }),
+            Animated.timing(dot2Animation, {
+              toValue: 0,
+              duration: 400,
+              useNativeDriver: true,
+              delay: 800,
+            }),
+            Animated.timing(dot3Animation, {
+              toValue: 0,
+              duration: 400,
+              useNativeDriver: true,
+              delay: 1000,
+            }),
+          ]),
+        ])
+      ).start();
+    };
+
+    animateDots();
+
+    return () => {
+      dot1Animation.stopAnimation();
+      dot2Animation.stopAnimation();
+      dot3Animation.stopAnimation();
+    };
+  }, []);
 
   // Simulate typing animation for AI responses
   const startTypingAnimation = (text: string) => {
@@ -90,38 +154,56 @@ export default function ChatScreen() {
     }, typingSpeed);
   };
   
-  // Clean up animation on unmount
-  useEffect(() => {
-    return () => {
-      if (typingAnimation.current) {
-        clearInterval(typingAnimation.current);
-      }
-    };
-  }, []);
-
-  // Notification management
+  // Improved notification animation with better timing and easing
   const showNotification = (message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type });
     
-    // Animate in
+    // Animate in with better spring physics
     Animated.spring(notificationAnimatedValue, {
       toValue: 0,
       useNativeDriver: true,
-      tension: 100,
-      friction: 8,
+      tension: 120,
+      friction: 12,
+      restSpeedThreshold: 0.01,
+      restDisplacementThreshold: 0.1,
     }).start();
     
-    // Auto hide after 3 seconds
+    // Auto hide after 3 seconds with smoother timing
     setTimeout(() => {
       Animated.timing(notificationAnimatedValue, {
         toValue: -100,
-        duration: 300,
+        duration: 400,
         useNativeDriver: true,
+        easing: Easing.out(Easing.quad),
       }).start(() => {
         setNotification(null);
       });
     }, 3000);
   };
+
+  // Manual Keyboard handling - THE FIX
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      (e) => {
+        setKeyboardHeight(e.endCoordinates.height);
+        if (flatListRef.current) {
+          flatListRef.current.scrollToEnd({ animated: true });
+        }
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+    
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   // Load chat history on mount
   useEffect(() => {
@@ -433,8 +515,10 @@ export default function ChatScreen() {
     Animated.spring(sidebarAnimatedValue, {
       toValue,
       useNativeDriver: true,
-      tension: 100,
-      friction: 8,
+      tension: 150,
+      friction: 15,
+      restSpeedThreshold: 0.01,
+      restDisplacementThreshold: 0.1,
     }).start();
     
     setShowSidebar(!showSidebar);
@@ -504,6 +588,45 @@ export default function ChatScreen() {
     const isTyping = item.status === 'typing';
     const hasImage = item.attachments && item.attachments.length > 0;
     
+    // Define markdown styles
+    const markdownStyles = {
+      text: {
+        fontSize: Typography.fontSize.base,
+        lineHeight: 22,
+        fontFamily: Typography.fontFamily.regular,
+        color: isUser ? theme.colors.text.inverse : theme.colors.text.primary,
+      },
+      strong: {
+        fontFamily: Typography.fontFamily.bold,
+        fontWeight: Typography.fontWeight.bold as '700',
+      },
+      em: {
+        fontFamily: Typography.fontFamily.regular,
+        fontStyle: 'italic' as 'italic',
+      },
+      heading1: {
+        fontSize: Typography.fontSize.xl,
+        fontFamily: Typography.fontFamily.bold,
+        marginVertical: 10,
+      },
+      heading2: {
+        fontSize: Typography.fontSize.lg,
+        fontFamily: Typography.fontFamily.bold,
+        marginVertical: 8,
+      },
+      heading3: {
+        fontSize: Typography.fontSize.base,
+        fontFamily: Typography.fontFamily.bold,
+        marginVertical: 6,
+      },
+      paragraph: {
+        marginVertical: 2,
+      },
+      list_item: {
+        marginVertical: 2,
+      },
+    };
+    
     return (
       <View style={[
         styles.messageContainer,
@@ -533,18 +656,60 @@ export default function ChatScreen() {
               <View style={styles.typingContainer}>
                 <Text style={styles.messageText}>{typingText}</Text>
                 <View style={styles.typingDots}>
-                  <View style={[styles.dot, styles.dot1]} />
-                  <View style={[styles.dot, styles.dot2]} />
-                  <View style={[styles.dot, styles.dot3]} />
+                  <Animated.View 
+                    style={[styles.dot, styles.dot1, { 
+                      opacity: dot1Animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.3, 1]
+                      }),
+                      transform: [{
+                        scale: dot1Animation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.2]
+                        })
+                      }]
+                    }]}
+                  />
+                  <Animated.View 
+                    style={[styles.dot, styles.dot2, { 
+                      opacity: dot2Animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.3, 1]
+                      }),
+                      transform: [{
+                        scale: dot2Animation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.2]
+                        })
+                      }]
+                    }]}
+                  />
+                  <Animated.View 
+                    style={[styles.dot, styles.dot3, { 
+                      opacity: dot3Animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.3, 1]
+                      }),
+                      transform: [{
+                        scale: dot3Animation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.2]
+                        })
+                      }]
+                    }]}
+                  />
                 </View>
               </View>
             ) : (
-              <Text style={[
-                styles.messageText,
-                isUser ? styles.userText : styles.assistantText
-              ]}>
+              <Markdown
+                style={markdownStyles}
+                onLinkPress={(url) => {
+                  // Handle link press if needed
+                  return false;
+                }}
+              >
                 {item.content}
-              </Text>
+              </Markdown>
             )}
           </View>
         )}
@@ -623,249 +788,251 @@ export default function ChatScreen() {
   };
 
   return (
-    <KeyboardAvoidingView 
+    <SafeAreaView 
       style={[styles.safeArea, { backgroundColor: theme.colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      edges={['left', 'right', 'bottom']}
     >
-      <SafeAreaView style={[styles.innerContainer, { backgroundColor: theme.colors.background }]} edges={['left', 'right']}>
-        <StatusBar barStyle={theme.mode === 'dark' ? "light-content" : "dark-content"} backgroundColor={theme.colors.background} />
-        
-        {/* Top Notification */}
-        {notification && (
-          <Animated.View 
-            style={[
-              styles.notificationContainer,
-              {
-                backgroundColor: notification.type === 'success' ? theme.colors.success : theme.colors.error,
-                transform: [{ translateY: notificationAnimatedValue }]
-              }
-            ]}
-          >
-            <Text style={styles.notificationText}>{notification.message}</Text>
-          </Animated.View>
-        )}
-        
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.sidebarToggle}
-            onPress={toggleSidebar}
-          >
-            <Icons.Menu size={24} color={theme.colors.text.primary} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Chat</Text>
-          <TouchableOpacity 
-            style={styles.newChatButton}
-            onPress={createNewChat}
-          >
-            <Icons.Add size={24} color={theme.colors.primary[500]} />
-          </TouchableOpacity>
-        </View>
-        
-        {/* Premium Sidebar */}
+      <StatusBar barStyle={theme.mode === 'dark' ? "light-content" : "dark-content"} backgroundColor={theme.colors.background} />
+      
+      {/* Top Notification */}
+      {notification && (
         <Animated.View 
           style={[
-            styles.sidebar,
+            styles.notificationContainer,
             {
-              transform: [{ translateX: sidebarAnimatedValue }]
+              backgroundColor: notification.type === 'success' ? theme.colors.success : theme.colors.error,
+              transform: [{ translateY: notificationAnimatedValue }]
             }
           ]}
         >
-          <BlurView intensity={95} style={styles.sidebarBlur}>
-            <View style={styles.sidebarContent}>
-              <View style={styles.sidebarHeader}>
-                <Text style={styles.sidebarTitle}>Chat History</Text>
-                <TouchableOpacity 
-                  style={styles.sidebarCloseButton}
-                  onPress={toggleSidebar}
-                >
-                  <Icons.Close size={20} color={theme.colors.text.secondary} />
-                </TouchableOpacity>
-              </View>
-              
-              <FlatList
-                data={chatHistory}
-                keyExtractor={item => item.id}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.chatHistoryList}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity
-                    style={[
-                      styles.chatHistoryItem,
-                      currentChat?.id === item.id && styles.chatHistoryItemActive
-                    ]}
-                    onPress={() => selectChat(item)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.chatHistoryItemContent}>
-                      <View style={styles.chatHistoryIcon}>
-                        <Icons.Chat size={16} color={theme.colors.primary[500]} />
-                      </View>
-                      <View style={styles.chatHistoryText}>
-                        <Text 
-                          style={[
-                            styles.chatHistoryPreview,
-                            currentChat?.id === item.id && styles.chatHistoryPreviewActive
-                          ]}
-                          numberOfLines={2}
-                        >
-                          {formatChatPreview(item.messages)}
-                        </Text>
-                        <Text style={styles.chatHistoryDate}>
-                          {formatChatDate(item.updatedAt)}
-                        </Text>
-                      </View>
-                    </View>
-                    
-                    <TouchableOpacity
-                      style={styles.deleteChatButton}
-                      onPress={() => deleteChat(item.id)}
-                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                    >
-                      <Icons.Delete size={14} color={theme.colors.error} />
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                )}
-                ListEmptyComponent={() => (
-                  <View style={styles.emptyChatHistory}>
-                    <Icons.Chat size={48} color={theme.colors.text.tertiary} />
-                    <Text style={styles.emptyChatHistoryText}>No chat history yet</Text>
-                    <Text style={styles.emptyChatHistorySubtext}>Start a conversation to see it here</Text>
-                  </View>
-                )}
-              />
-              
-              <View style={styles.sidebarFooter}>
-                <TouchableOpacity 
-                  style={styles.newChatButtonSidebar}
-                  onPress={() => {
-                    createNewChat();
-                    toggleSidebar();
-                  }}
-                >
-                  <Icons.Add size={18} color={theme.colors.text.inverse} />
-                  <Text style={styles.newChatButtonText}>New Chat</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </BlurView>
+          <Text style={styles.notificationText}>{notification.message}</Text>
         </Animated.View>
-        
-        {/* Overlay when sidebar is open */}
-        {showSidebar && (
-          <TouchableOpacity 
-            style={styles.sidebarOverlay}
-            onPress={toggleSidebar}
-            activeOpacity={1}
-          />
-        )}
-        
-        <View style={styles.container}>
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            renderItem={renderMessage}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.messageList}
-            showsVerticalScrollIndicator={false}
-            onScroll={(event) => {
-              const offsetY = event.nativeEvent.contentOffset.y;
-              setShowScrollButton(offsetY < -50);
-            }}
-          />
-          
-          {showScrollButton && (
-            <TouchableOpacity 
-              style={styles.scrollToBottomButton}
-              onPress={() => {
-                flatListRef.current?.scrollToEnd({ animated: true });
-                setShowScrollButton(false);
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              }}
-            >
-              <Icons.ArrowDown size={20} color={theme.colors.text.inverse} />
-            </TouchableOpacity>
-          )}
-        </View>
-        
-        {/* Bottom input area - properly themed */}
-        <View style={[styles.bottomContainer, { backgroundColor: theme.colors.background }]}>
-          {attachments.length > 0 && (
-            <View style={styles.attachmentsPreviewContainer}>
-              {attachments.map(attachment => (
-                <View key={attachment.id} style={styles.attachmentPreview}>
-                  <Image
-                    source={{ uri: attachment.uri }}
-                    style={styles.attachmentPreviewImage}
-                  />
-                  <TouchableOpacity
-                    style={styles.removeAttachmentButton}
-                    onPress={() => removeAttachment(attachment.id)}
-                  >
-                    <Text style={styles.removeAttachmentText}>×</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          )}
-          
-          <View style={styles.inputContainerWrapper}>
-            <View style={styles.inputContainer}>
+      )}
+      
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.sidebarToggle}
+          onPress={toggleSidebar}
+        >
+          <Icons.Menu size={24} color={theme.colors.text.primary} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Chat</Text>
+        <TouchableOpacity 
+          style={styles.newChatButton}
+          onPress={createNewChat}
+        >
+          <Icons.Add size={24} color={theme.colors.primary[500]} />
+        </TouchableOpacity>
+      </View>
+      
+      {/* Premium Sidebar */}
+      <Animated.View 
+        style={[
+          styles.sidebar,
+          {
+            transform: [{ translateX: sidebarAnimatedValue }]
+          }
+        ]}
+      >
+        <BlurView intensity={95} style={styles.sidebarBlur}>
+          <View style={styles.sidebarContent}>
+            <View style={styles.sidebarHeader}>
+              <Text style={styles.sidebarTitle}>Chat History</Text>
               <TouchableOpacity 
-                style={styles.attachButton}
-                onPress={handlePickImage}
+                style={styles.sidebarCloseButton}
+                onPress={toggleSidebar}
               >
-                <Icons.Gallery size={22} color={theme.colors.primary[600]} />
+                <Icons.Close size={20} color={theme.colors.text.secondary} />
               </TouchableOpacity>
-              
-              <TextInput
-                ref={inputRef}
-                style={styles.input}
-                placeholder={t('chat.inputPlaceholder')}
-                placeholderTextColor={theme.colors.text.secondary}
-                value={inputText}
-                onChangeText={setInputText}
-                multiline
-                maxLength={1000}
-                onFocus={() => {
-                  setTimeout(() => {
-                    flatListRef.current?.scrollToEnd({ animated: true });
-                  }, 100);
+            </View>
+            
+            <FlatList
+              data={chatHistory}
+              keyExtractor={item => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.chatHistoryList}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.chatHistoryItem,
+                    currentChat?.id === item.id && styles.chatHistoryItemActive
+                  ]}
+                  onPress={() => selectChat(item)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.chatHistoryItemContent}>
+                    <View style={styles.chatHistoryIcon}>
+                      <Icons.Chat size={16} color={theme.colors.primary[500]} />
+                    </View>
+                    <View style={styles.chatHistoryText}>
+                      <Text 
+                        style={[
+                          styles.chatHistoryPreview,
+                          currentChat?.id === item.id && styles.chatHistoryPreviewActive
+                        ]}
+                        numberOfLines={2}
+                      >
+                        {formatChatPreview(item.messages)}
+                      </Text>
+                      <Text style={styles.chatHistoryDate}>
+                        {formatChatDate(item.updatedAt)}
+                      </Text>
+                    </View>
+                  </View>
+                  
+                  <TouchableOpacity
+                    style={styles.deleteChatButton}
+                    onPress={() => deleteChat(item.id)}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    <Icons.Delete size={14} color={theme.colors.error} />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={() => (
+                <View style={styles.emptyChatHistory}>
+                  <Icons.Chat size={48} color={theme.colors.text.tertiary} />
+                  <Text style={styles.emptyChatHistoryText}>No chat history yet</Text>
+                  <Text style={styles.emptyChatHistorySubtext}>Start a conversation to see it here</Text>
+                </View>
+              )}
+            />
+            
+            <View style={styles.sidebarFooter}>
+              <TouchableOpacity 
+                style={styles.newChatButtonSidebar}
+                onPress={() => {
+                  createNewChat();
+                  toggleSidebar();
                 }}
-              />
-              
-              <TouchableOpacity
-                style={[
-                  styles.sendButton,
-                  (!inputText.trim() && attachments.length === 0) ? styles.sendButtonDisabled : {}
-                ]}
-                onPress={handleSendMessage}
-                disabled={(!inputText.trim() && attachments.length === 0) || isLoading}
               >
-                {isLoading ? (
-                  <ActivityIndicator size="small" color={theme.colors.text.inverse} />
-                ) : (
-                  <Icons.Send 
-                    size={18} 
-                    color={(!inputText.trim() && attachments.length === 0) 
-                      ? (theme.mode === 'dark' ? '#ffffff' : '#000000')
-                      : theme.colors.text.inverse
-                    } 
-                  />
-                )}
+                <Icons.Add size={18} color={theme.colors.text.inverse} />
+                <Text style={styles.newChatButtonText}>New Chat</Text>
               </TouchableOpacity>
             </View>
           </View>
+        </BlurView>
+      </Animated.View>
+      
+      {/* Overlay when sidebar is open */}
+      {showSidebar && (
+        <TouchableOpacity 
+          style={styles.sidebarOverlay}
+          onPress={toggleSidebar}
+          activeOpacity={1}
+        />
+      )}
+      
+      <View style={styles.container}>
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          renderItem={renderMessage}
+          keyExtractor={item => item.id}
+          contentContainerStyle={[styles.messageList, { paddingBottom: keyboardHeight > 0 ? keyboardHeight + 80 : 80}]}
+          showsVerticalScrollIndicator={false}
+          onScroll={(event) => {
+            const offsetY = event.nativeEvent.contentOffset.y;
+            setShowScrollButton(offsetY < -50);
+          }}
+        />
+        
+        {showScrollButton && (
+          <TouchableOpacity 
+            style={styles.scrollToBottomButton}
+            onPress={() => {
+              flatListRef.current?.scrollToEnd({ animated: true });
+              setShowScrollButton(false);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }}
+          >
+            <Icons.ArrowDown size={20} color={theme.colors.text.inverse} />
+          </TouchableOpacity>
+        )}
+      </View>
+      
+      {/* Bottom input area - properly themed */}
+      <View style={[
+        styles.bottomContainer, 
+        { 
+          backgroundColor: theme.colors.background,
+          marginBottom: keyboardHeight // Adjust position based on keyboard height
+        }
+      ]}>
+        {attachments.length > 0 && (
+          <View style={styles.attachmentsPreviewContainer}>
+            {attachments.map(attachment => (
+              <View key={attachment.id} style={styles.attachmentPreview}>
+                <Image
+                  source={{ uri: attachment.uri }}
+                  style={styles.attachmentPreviewImage}
+                />
+                <TouchableOpacity
+                  style={styles.removeAttachmentButton}
+                  onPress={() => removeAttachment(attachment.id)}
+                >
+                  <Text style={styles.removeAttachmentText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
+        
+        <View style={styles.inputContainerWrapper}>
+          <View style={styles.inputContainer}>
+            <TouchableOpacity 
+              style={styles.attachButton}
+              onPress={handlePickImage}
+            >
+              <Icons.Gallery size={22} color={theme.colors.primary[600]} />
+            </TouchableOpacity>
+            
+            <TextInput
+              ref={inputRef}
+              style={styles.input}
+              placeholder={t('chat.inputPlaceholder')}
+              placeholderTextColor={theme.colors.text.secondary}
+              value={inputText}
+              onChangeText={setInputText}
+              multiline
+              maxLength={1000}
+              onFocus={() => {
+                setTimeout(() => {
+                  flatListRef.current?.scrollToEnd({ animated: true });
+                }, 100);
+              }}
+            />
+            
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                (!inputText.trim() && attachments.length === 0) ? styles.sendButtonDisabled : {}
+              ]}
+              onPress={handleSendMessage}
+              disabled={(!inputText.trim() && attachments.length === 0) || isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color={theme.colors.text.inverse} />
+              ) : (
+                <Icons.Send 
+                  size={18} 
+                  color={(!inputText.trim() && attachments.length === 0) 
+                    ? (theme.mode === 'dark' ? '#ffffff' : '#000000')
+                    : theme.colors.text.inverse
+                  } 
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const getStyles = (theme: any) => StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme.colors.background,
   },
   innerContainer: {
     flex: 1,
@@ -904,7 +1071,6 @@ const getStyles = (theme: any) => StyleSheet.create({
   messageList: {
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.md,
-    paddingBottom: Spacing.xl,
   },
   messageContainer: {
     marginBottom: Spacing.lg,
@@ -1023,7 +1189,6 @@ const getStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.background,
     borderTopWidth: 1,
     borderTopColor: theme.colors.border,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 0,
   },
   inputContainerWrapper: {
     paddingHorizontal: Spacing.lg,

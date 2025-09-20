@@ -1,20 +1,12 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Dimensions, StatusBar, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, StatusBar, Image, Animated } from 'react-native';
 import { router } from 'expo-router';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withTiming, 
-  withSequence,
-  runOnJS
-} from 'react-native-reanimated';
-import Colors from '@/constants/Colors';
 
 const { width, height } = Dimensions.get('window');
 
 export default function SplashScreen() {
-  const opacity = useSharedValue(0);
-  const scale = useSharedValue(0.9);
+  const opacity = new Animated.Value(0);
+  const scale = new Animated.Value(0.8); // Start smaller to accommodate larger image
 
   const navigateToMain = () => {
     router.replace('/home');
@@ -22,22 +14,35 @@ export default function SplashScreen() {
 
   useEffect(() => {
     // Animate logo appearance with a super fast animation
-    opacity.value = withTiming(1, { duration: 300 });
-    scale.value = withSequence(
-      withTiming(1.05, { duration: 250 }),
-      withTiming(1, { duration: 150 }, () => {
-        // Navigate to main app after animation
-        setTimeout(() => {
-          runOnJS(navigateToMain)();
-        }, 200); // Very short delay before navigation
-      })
-    );
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+    
+    Animated.sequence([
+      Animated.timing(scale, {
+        toValue: 1.05,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Navigate to main app after animation
+      setTimeout(() => {
+        navigateToMain();
+      }, 200); // Very short delay before navigation
+    });
   }, []);
 
-  const logoStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
+  const logoStyle = {
+    opacity,
+    transform: [{ scale }],
+  };
 
   return (
     <View style={styles.container}>
@@ -63,11 +68,12 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%', // Full width container
   },
   logoImage: {
-    width: width * 0.8, // 80% of screen width
-    height: height * 0.2, // 20% of screen height
-    maxWidth: 300, // Maximum width
-    maxHeight: 100, // Maximum height
+    width: '100%', // Full width
+    height: height * 0.3, // Increase height to 30% of screen height
+    maxWidth: width, // Maximum width is full screen width
+    maxHeight: 200, // Increase maximum height
   },
 });

@@ -21,7 +21,9 @@ module.exports = {
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
-      backgroundColor: "#1a6751" // Match the deep green from the image
+      backgroundColor: "#1a6751", // Match the deep green from the image
+      softwareKeyboardLayoutMode: "pan"
+
     },
     package: "com.august.ai"
   },

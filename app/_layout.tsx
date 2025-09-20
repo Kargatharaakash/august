@@ -57,6 +57,8 @@ export default function RootLayout() {
   };
 
   const handleOnboardingComplete = () => {
+    // Save onboarding completion status
+    AsyncStorage.setItem('@august_onboarding_completed', 'true');
     setShowOnboarding(false);
   };
 
@@ -80,7 +82,11 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+      <Stack screenOptions={{ 
+        headerShown: false, 
+        animation: 'slide_from_right',
+        contentStyle: { backgroundColor: 'transparent' }
+      }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="home" options={{ headerShown: false }} />
         <Stack.Screen name="chat" options={{ headerShown: false }} />

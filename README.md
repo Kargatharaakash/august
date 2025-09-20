@@ -73,7 +73,7 @@ A React Native Expo mobile application for health assistance featuring a chat in
 - **State Management**: React Hooks + Context
 - **Camera**: Expo Camera
 - **Image Handling**: Expo ImagePicker
-- **Animations**: React Native Reanimated
+- **Animations**: React Native Animated API
 - **Haptics**: Expo Haptics
 - **Internationalization**: i18next with multi-language support (English, Hindi, Gujarati)
 

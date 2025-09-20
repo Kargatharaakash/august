@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "augustai",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
     },
@@ -31,14 +31,12 @@
         "expo-build-properties",
         {
           "android": {
-            "ndkVersion": "27.1.12297006",
+            "ndkVersion": "25.1.8937393",
             "minSdkVersion": 24,
-            "compileSdkVersion": 35,
-            "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0",
-            "enableProguardInReleaseBuilds": false,
-            "softwareKeyboardLayoutMode": "pan"
-
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0",
+            "enableProguardInReleaseBuilds": false
           }
         }
       ]
