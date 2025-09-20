@@ -15,6 +15,7 @@ import {
   Animated,
   RefreshControl,
   Alert,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -26,6 +27,62 @@ import { useTheme } from '@/contexts/ThemeContext';
 import Typography from '@/constants/Typography';
 import Spacing from '@/constants/Spacing';
 import Icons from '@/constants/Icons';
+
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const NOTIFICATION_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const NOTIFICATION_MESSAGE_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const NOTIFICATION_TIME_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NOTIFICATION_ACTION_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const FILTER_CHIP_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const EMPTY_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const EMPTY_SUBTITLE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const UNREAD_BADGE_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.025; // 2.5% of screen width
+
+const NOTIFICATION_ICON_SIZE = SCREEN_WIDTH * 0.104; // 10.4% of screen width
+const NOTIFICATION_ICON_RADIUS = NOTIFICATION_ICON_SIZE / 2;
+const UNREAD_DOT_SIZE = SCREEN_WIDTH * 0.02; // 2% of screen width
+const UNREAD_DOT_RADIUS = UNREAD_DOT_SIZE / 2;
+const BACK_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MARK_ALL_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FILTER_CHIP_BORDER_RADIUS = SCREEN_WIDTH * 0.05; // 5% of screen width
+const NOTIFICATION_ITEM_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const HEADER_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const HEADER_TITLE_CONTAINER_MARGIN_LEFT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const UNREAD_BADGE_MARGIN_LEFT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const UNREAD_BADGE_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const UNREAD_BADGE_PADDING_VERTICAL = SCREEN_HEIGHT * 0.002; // 0.2% of screen height
+const UNREAD_BADGE_MIN_WIDTH = SCREEN_WIDTH * 0.064; // 6.4% of screen width
+const UNREAD_BADGE_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FILTER_CONTAINER_PADDING_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FILTER_CHIP_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FILTER_CHIP_PADDING_VERTICAL = SCREEN_WIDTH * 0.02; // 2% of screen width
+const FILTER_CHIP_MARGIN_RIGHT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NOTIFICATION_HEADER_PADDING = SCREEN_WIDTH * 0.05; // 5% of screen width
+const NOTIFICATION_ICON_MARGIN_RIGHT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NOTIFICATION_META_MARGIN_BOTTOM = SCREEN_WIDTH * 0.015; // 1.5% of screen width
+const NOTIFICATION_TITLE_MARGIN_RIGHT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NOTIFICATION_MESSAGE_LINE_HEIGHT = SCREEN_WIDTH * 0.052; // 5.2% of screen width
+const NOTIFICATION_MESSAGE_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NOTIFICATION_ACTION_MARGIN_TOP = SCREEN_WIDTH * 0.015; // 1.5% of screen width
+const NOTIFICATION_ACTION_TEXT_MARGIN_RIGHT = SCREEN_WIDTH * 0.015; // 1.5% of screen width
+const UNREAD_DOT_POSITION_TOP = SCREEN_WIDTH * 0.05; // 5% of screen width
+const UNREAD_DOT_POSITION_RIGHT = SCREEN_WIDTH * 0.05; // 5% of screen width
+const EMPTY_CONTAINER_PADDING_VERTICAL = SCREEN_WIDTH * 0.1; // 10% of screen width
+const EMPTY_CONTAINER_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const EMPTY_TITLE_MARGIN_TOP = SCREEN_WIDTH * 0.05; // 5% of screen width
+const EMPTY_TITLE_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const EMPTY_SUBTITLE_LINE_HEIGHT = SCREEN_WIDTH * 0.06; // 6% of screen width
+const NOTIFICATIONS_LIST_PADDING_TOP = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NOTIFICATIONS_LIST_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const NOTIFICATION_ITEM_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const BACK_BUTTON_PADDING = SCREEN_WIDTH * 0.025; // 2.5% of screen width
+const MARK_ALL_BUTTON_PADDING = SCREEN_WIDTH * 0.025; // 2.5% of screen width
+const SCROLL_CONTENT_PADDING_BOTTOM = SCREEN_WIDTH * 0.05; // 5% of screen width
 
 interface Notification {
   id: string;
@@ -470,51 +527,52 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
+    paddingHorizontal: HEADER_PADDING_HORIZONTAL,
+    paddingVertical: HEADER_PADDING_VERTICAL,
   },
   backButton: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: BACK_BUTTON_PADDING,
+    borderRadius: BACK_BUTTON_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
   },
   headerTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: HEADER_TITLE_CONTAINER_MARGIN_LEFT,
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
   },
   unreadBadge: {
-    marginLeft: Spacing.sm,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 4,
-    borderRadius: 12,
-    minWidth: 24,
+    marginLeft: UNREAD_BADGE_MARGIN_LEFT,
+    paddingHorizontal: UNREAD_BADGE_PADDING_HORIZONTAL,
+    paddingVertical: UNREAD_BADGE_PADDING_VERTICAL,
+    borderRadius: UNREAD_BADGE_BORDER_RADIUS,
+    minWidth: UNREAD_BADGE_MIN_WIDTH,
     alignItems: 'center',
   },
   unreadBadgeText: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: UNREAD_BADGE_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.inverse,
   },
   markAllButton: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: MARK_ALL_BUTTON_PADDING,
+    borderRadius: MARK_ALL_BUTTON_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
   },
   filterContainer: {
-    paddingHorizontal: Spacing.lg,
-    paddingBottom: Spacing.md,
+    paddingHorizontal: HEADER_PADDING_HORIZONTAL,
+    paddingBottom: FILTER_CONTAINER_PADDING_BOTTOM,
   },
   filterChip: {
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderRadius: 20,
+    paddingHorizontal: FILTER_CHIP_PADDING_HORIZONTAL,
+    paddingVertical: FILTER_CHIP_PADDING_VERTICAL,
+    borderRadius: FILTER_CHIP_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
-    marginRight: Spacing.sm,
+    marginRight: FILTER_CHIP_MARGIN_RIGHT,
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
@@ -523,7 +581,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     borderColor: theme.colors.primary[200],
   },
   filterChipText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: FILTER_CHIP_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.secondary,
   },
@@ -534,23 +592,23 @@ const getStyles = (theme: any) => StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Spacing.xl,
+    paddingBottom: SCROLL_CONTENT_PADDING_BOTTOM,
   },
   notificationsList: {
-    paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.md,
+    paddingHorizontal: NOTIFICATIONS_LIST_PADDING_HORIZONTAL,
+    paddingTop: NOTIFICATIONS_LIST_PADDING_TOP,
   },
   notificationItem: {
     backgroundColor: theme.colors.surface,
-    borderRadius: 16,
-    marginBottom: Spacing.md,
+    borderRadius: NOTIFICATION_ITEM_BORDER_RADIUS,
+    marginBottom: NOTIFICATION_ITEM_MARGIN_BOTTOM,
     borderWidth: 1,
     borderColor: theme.colors.border,
     borderLeftWidth: 4,
     shadowColor: theme.colors.shadow,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: SCREEN_HEIGHT * 0.001 }, // 0.1% of screen height
     shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowRadius: SCREEN_WIDTH * 0.01, // 1% of screen width
     elevation: 2,
   },
   notificationItemUnread: {
@@ -559,16 +617,16 @@ const getStyles = (theme: any) => StyleSheet.create({
   notificationHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    padding: Spacing.lg,
+    padding: NOTIFICATION_HEADER_PADDING,
     position: 'relative',
   },
   notificationIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: NOTIFICATION_ICON_SIZE,
+    height: NOTIFICATION_ICON_SIZE,
+    borderRadius: NOTIFICATION_ICON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: Spacing.md,
+    marginRight: NOTIFICATION_ICON_MARGIN_RIGHT,
   },
   notificationContent: {
     flex: 1,
@@ -577,64 +635,64 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: Spacing.xs,
+    marginBottom: NOTIFICATION_META_MARGIN_BOTTOM,
   },
   notificationTitle: {
-    fontSize: Typography.fontSize.base,
+    fontSize: NOTIFICATION_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
     flex: 1,
-    marginRight: Spacing.sm,
+    marginRight: NOTIFICATION_TITLE_MARGIN_RIGHT,
   },
   notificationTime: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: NOTIFICATION_TIME_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
   notificationMessage: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: NOTIFICATION_MESSAGE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
-    lineHeight: 20,
-    marginBottom: Spacing.sm,
+    lineHeight: NOTIFICATION_MESSAGE_LINE_HEIGHT,
+    marginBottom: NOTIFICATION_MESSAGE_MARGIN_BOTTOM,
   },
   notificationAction: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: Spacing.xs,
+    marginTop: NOTIFICATION_ACTION_MARGIN_TOP,
   },
   notificationActionText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: NOTIFICATION_ACTION_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    marginRight: Spacing.xs,
+    marginRight: NOTIFICATION_ACTION_TEXT_MARGIN_RIGHT,
   },
   unreadDot: {
     position: 'absolute',
-    top: Spacing.lg,
-    right: Spacing.lg,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    top: UNREAD_DOT_POSITION_TOP,
+    right: UNREAD_DOT_POSITION_RIGHT,
+    width: UNREAD_DOT_SIZE,
+    height: UNREAD_DOT_SIZE,
+    borderRadius: UNREAD_DOT_RADIUS,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.xl * 2,
+    paddingHorizontal: EMPTY_CONTAINER_PADDING_HORIZONTAL,
+    paddingVertical: EMPTY_CONTAINER_PADDING_VERTICAL,
   },
   emptyTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: EMPTY_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.tertiary,
-    marginTop: Spacing.lg,
-    marginBottom: Spacing.sm,
+    marginTop: EMPTY_TITLE_MARGIN_TOP,
+    marginBottom: EMPTY_TITLE_MARGIN_BOTTOM,
   },
   emptySubtitle: {
-    fontSize: Typography.fontSize.base,
+    fontSize: EMPTY_SUBTITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: EMPTY_SUBTITLE_LINE_HEIGHT,
   },
 });

@@ -25,7 +25,43 @@ import Icons from '@/constants/Icons';
 import { getPrescriptions } from '@/services/storage';
 import { PrescriptionData } from '@/types';
 
-const { width: screenWidth } = Dimensions.get('window');
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const SECTION_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const RECORD_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const RECORD_PROVIDER_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const RECORD_DATE_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const RECORD_SUMMARY_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const RECORD_SUMMARY_LINE_HEIGHT = SCREEN_WIDTH * 0.05; // 5% of screen width
+const TAG_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FILTER_TAB_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const STATS_VALUE_FONT_SIZE = SCREEN_WIDTH * 0.07; // 7% of screen width
+const STATS_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const TREND_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SEARCH_INPUT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const LOADING_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const EMPTY_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const EMPTY_SUBTITLE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const RECORD_COUNT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+
+const STATS_CARD_MIN_WIDTH = SCREEN_WIDTH * 0.35; // 35% of screen width
+const STATS_CARD_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const RECORD_CARD_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const FILTER_TAB_BORDER_RADIUS = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SEARCH_INPUT_CONTAINER_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const BACK_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_ACTION_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const STATS_ICON_SIZE = SCREEN_WIDTH * 0.09; // 9% of screen width
+const STATS_ICON_RADIUS = STATS_ICON_SIZE / 2;
+const RECORD_ICON_SIZE = SCREEN_WIDTH * 0.1; // 10% of screen width
+const RECORD_ICON_RADIUS = RECORD_ICON_SIZE / 2;
+const STATUS_BADGE_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const TAG_BORDER_RADIUS = SCREEN_WIDTH * 0.02; // 2% of screen width
+const ADD_BUTTON_SIZE = SCREEN_WIDTH * 0.14; // 14% of screen width
+const ADD_BUTTON_RADIUS = ADD_BUTTON_SIZE / 2;
 
 interface HealthRecord {
   id: string;
@@ -554,86 +590,86 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
+    paddingVertical: SCREEN_WIDTH * 0.04, // 4% of screen width
   },
   backButton: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: SCREEN_WIDTH * 0.025, // 2.5% of screen width
+    borderRadius: BACK_BUTTON_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
   },
   headerAction: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: SCREEN_WIDTH * 0.025, // 2.5% of screen width
+    borderRadius: HEADER_ACTION_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
   },
   searchContainer: {
-    paddingHorizontal: Spacing.lg,
-    paddingBottom: Spacing.md,
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
+    paddingBottom: SCREEN_WIDTH * 0.04, // 4% of screen width
   },
   searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.surface,
-    borderRadius: 16,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
+    borderRadius: SEARCH_INPUT_CONTAINER_BORDER_RADIUS,
+    paddingHorizontal: SCREEN_WIDTH * 0.03, // 3% of screen width
+    paddingVertical: SCREEN_WIDTH * 0.02, // 2% of screen width
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
   searchInput: {
     flex: 1,
-    fontSize: Typography.fontSize.base,
+    fontSize: SEARCH_INPUT_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.primary,
-    marginLeft: Spacing.sm,
-    marginRight: Spacing.sm,
+    marginLeft: SCREEN_WIDTH * 0.025, // 2.5% of screen width
+    marginRight: SCREEN_WIDTH * 0.025, // 2.5% of screen width
   },
   content: {
     flex: 1,
   },
   section: {
-    marginBottom: Spacing.xl,
+    marginBottom: SCREEN_HEIGHT * 0.03, // 3% of screen height
   },
   sectionTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: SECTION_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
-    marginBottom: Spacing.md,
-    paddingHorizontal: Spacing.lg,
+    marginBottom: SCREEN_WIDTH * 0.03, // 3% of screen width
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.md,
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
+    marginBottom: SCREEN_WIDTH * 0.03, // 3% of screen width
   },
   recordCount: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: RECORD_COUNT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.secondary,
   },
   statsContainer: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
   },
   statsCard: {
     backgroundColor: theme.colors.surface,
-    borderRadius: 16,
-    padding: Spacing.lg,
-    marginRight: Spacing.md,
+    borderRadius: STATS_CARD_BORDER_RADIUS,
+    padding: SCREEN_WIDTH * 0.03, // 3% of screen width
+    marginRight: SCREEN_WIDTH * 0.03, // 3% of screen width
     borderLeftWidth: 4,
     shadowColor: theme.colors.shadow,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: SCREEN_HEIGHT * 0.002 }, // 0.2% of screen height
     shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowRadius: SCREEN_WIDTH * 0.02, // 2% of screen width
     elevation: 3,
-    minWidth: 140,
+    minWidth: STATS_CARD_MIN_WIDTH,
   },
   statsContent: {
     alignItems: 'flex-start',
@@ -643,49 +679,49 @@ const getStyles = (theme: any) => StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: Spacing.sm,
+    marginBottom: SCREEN_WIDTH * 0.025, // 2.5% of screen width
   },
   statsIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: STATS_ICON_SIZE,
+    height: STATS_ICON_SIZE,
+    borderRadius: STATS_ICON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
   },
   trendBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.xs,
-    paddingVertical: 2,
-    borderRadius: 8,
+    paddingHorizontal: SCREEN_WIDTH * 0.015, // 1.5% of screen width
+    paddingVertical: SCREEN_HEIGHT * 0.001, // 0.1% of screen height
+    borderRadius: SCREEN_WIDTH * 0.02, // 2% of screen width
   },
   trendText: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: TREND_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
-    marginLeft: 2,
+    marginLeft: SCREEN_WIDTH * 0.005, // 0.5% of screen width
   },
   statsValue: {
-    fontSize: Typography.fontSize['3xl'],
+    fontSize: STATS_VALUE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
-    marginBottom: 2,
+    marginBottom: SCREEN_HEIGHT * 0.001, // 0.1% of screen height
   },
   statsTitle: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: STATS_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
   filterContainer: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
   },
   filterTab: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderRadius: 20,
+    paddingHorizontal: SCREEN_WIDTH * 0.03, // 3% of screen width
+    paddingVertical: SCREEN_WIDTH * 0.02, // 2% of screen width
+    borderRadius: FILTER_TAB_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
-    marginRight: Spacing.sm,
+    marginRight: SCREEN_WIDTH * 0.03, // 3% of screen width
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
@@ -694,54 +730,54 @@ const getStyles = (theme: any) => StyleSheet.create({
     borderColor: theme.colors.primary[200],
   },
   filterTabText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: FILTER_TAB_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.secondary,
-    marginLeft: Spacing.xs,
+    marginLeft: SCREEN_WIDTH * 0.015, // 1.5% of screen width
   },
   filterTabTextActive: {
     color: theme.colors.primary[500],
   },
   recordsList: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: SCREEN_WIDTH * 0.05, // 5% of screen width
   },
   recordCard: {
     backgroundColor: theme.colors.surface,
-    borderRadius: 16,
-    padding: Spacing.lg,
-    marginBottom: Spacing.md,
+    borderRadius: RECORD_CARD_BORDER_RADIUS,
+    padding: SCREEN_WIDTH * 0.03, // 3% of screen width
+    marginBottom: SCREEN_WIDTH * 0.03, // 3% of screen width
     borderWidth: 1,
     borderColor: theme.colors.border,
     shadowColor: theme.colors.shadow,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: SCREEN_HEIGHT * 0.001 }, // 0.1% of screen height
     shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowRadius: SCREEN_WIDTH * 0.01, // 1% of screen width
     elevation: 2,
   },
   recordHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: Spacing.sm,
+    marginBottom: SCREEN_WIDTH * 0.025, // 2.5% of screen width
   },
   recordIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: RECORD_ICON_SIZE,
+    height: RECORD_ICON_SIZE,
+    borderRadius: RECORD_ICON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: Spacing.sm,
+    marginRight: SCREEN_WIDTH * 0.03, // 3% of screen width
   },
   recordInfo: {
     flex: 1,
   },
   recordTitle: {
-    fontSize: Typography.fontSize.base,
+    fontSize: RECORD_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
-    marginBottom: 2,
+    marginBottom: SCREEN_HEIGHT * 0.001, // 0.1% of screen height
   },
   recordProvider: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: RECORD_PROVIDER_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
@@ -749,10 +785,10 @@ const getStyles = (theme: any) => StyleSheet.create({
     alignItems: 'flex-end',
   },
   statusBadge: {
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginBottom: 4,
+    paddingHorizontal: SCREEN_WIDTH * 0.03, // 3% of screen width
+    paddingVertical: SCREEN_HEIGHT * 0.002, // 0.2% of screen height
+    borderRadius: STATUS_BADGE_BORDER_RADIUS,
+    marginBottom: SCREEN_HEIGHT * 0.002, // 0.2% of screen height
   },
   statusText: {
     fontSize: Typography.fontSize.xs,
@@ -760,16 +796,16 @@ const getStyles = (theme: any) => StyleSheet.create({
     textTransform: 'capitalize',
   },
   recordDate: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: RECORD_DATE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
   recordSummary: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: RECORD_SUMMARY_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.primary,
-    lineHeight: 20,
-    marginBottom: Spacing.sm,
+    lineHeight: RECORD_SUMMARY_LINE_HEIGHT,
+    marginBottom: SCREEN_WIDTH * 0.03, // 3% of screen width
   },
   recordTags: {
     flexDirection: 'row',
@@ -777,57 +813,57 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   tag: {
     backgroundColor: theme.colors.surfaceSecondary,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 4,
-    borderRadius: 8,
-    marginRight: Spacing.xs,
-    marginBottom: Spacing.xs,
+    paddingHorizontal: SCREEN_WIDTH * 0.03, // 3% of screen width
+    paddingVertical: SCREEN_HEIGHT * 0.002, // 0.2% of screen height
+    borderRadius: TAG_BORDER_RADIUS,
+    marginRight: SCREEN_WIDTH * 0.015, // 1.5% of screen width
+    marginBottom: SCREEN_WIDTH * 0.015, // 1.5% of screen width
   },
   tagText: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: TAG_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.secondary,
   },
   loadingContainer: {
-    padding: Spacing.xl,
+    padding: SCREEN_WIDTH * 0.05, // 5% of screen width
     alignItems: 'center',
   },
   loadingText: {
-    fontSize: Typography.fontSize.base,
+    fontSize: LOADING_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
   emptyContainer: {
-    padding: Spacing.xl,
+    padding: SCREEN_WIDTH * 0.05, // 5% of screen width
     alignItems: 'center',
   },
   emptyTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: EMPTY_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.tertiary,
-    marginTop: Spacing.md,
-    marginBottom: Spacing.xs,
+    marginTop: SCREEN_WIDTH * 0.03, // 3% of screen width
+    marginBottom: SCREEN_WIDTH * 0.015, // 1.5% of screen width
   },
   emptySubtitle: {
-    fontSize: Typography.fontSize.base,
+    fontSize: EMPTY_SUBTITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
     textAlign: 'center',
   },
   addButton: {
     position: 'absolute',
-    bottom: Spacing.xl,
-    right: Spacing.xl,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    bottom: SCREEN_WIDTH * 0.05, // 5% of screen width
+    right: SCREEN_WIDTH * 0.05, // 5% of screen width
+    width: ADD_BUTTON_SIZE,
+    height: ADD_BUTTON_SIZE,
+    borderRadius: ADD_BUTTON_RADIUS,
     backgroundColor: theme.colors.primary[500],
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: theme.colors.primary[500],
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: SCREEN_HEIGHT * 0.004 }, // 0.4% of screen height
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: SCREEN_WIDTH * 0.02, // 2% of screen width
     elevation: 8,
   },
 });

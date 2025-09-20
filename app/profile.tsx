@@ -11,6 +11,7 @@ import {
   Alert,
   TextInput,
   Modal,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -23,6 +24,70 @@ import { useTheme } from '@/contexts/ThemeContext';
 import Typography from '@/constants/Typography';
 import Spacing from '@/constants/Spacing';
 import Icons from '@/constants/Icons';
+
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const PROFILE_NAME_FONT_SIZE = SCREEN_WIDTH * 0.06; // 6% of screen width
+const PROFILE_EMAIL_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const STAT_VALUE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const STAT_LABEL_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const SECTION_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const FIELD_LABEL_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const FIELD_VALUE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const SIGN_OUT_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const MODAL_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const MODAL_INPUT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const MODAL_BUTTON_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+
+const AVATAR_SIZE = SCREEN_WIDTH * 0.26; // 26% of screen width
+const AVATAR_RADIUS = AVATAR_SIZE / 2;
+const EDIT_AVATAR_BUTTON_SIZE = SCREEN_WIDTH * 0.084; // 8.4% of screen width
+const EDIT_AVATAR_BUTTON_RADIUS = EDIT_AVATAR_BUTTON_SIZE / 2;
+const HEADER_BUTTON_SIZE = SCREEN_WIDTH * 0.11; // 11% of screen width
+const HEADER_BUTTON_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FIELD_ICON_SIZE = SCREEN_WIDTH * 0.104; // 10.4% of screen width
+const FIELD_ICON_RADIUS = FIELD_ICON_SIZE / 2;
+const MODAL_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const PROFILE_HEADER_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const SECTION_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const MODAL_CONTENT_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const SIGN_OUT_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const PROFILE_HEADER_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SIGN_OUT_BUTTON_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const MODAL_OVERLAY_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const MODAL_CONTENT_PADDING = SCREEN_WIDTH * 0.05; // 5% of screen width
+const PROFILE_HEADER_PADDING_VERTICAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_TITLE_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SECTION_TITLE_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const PROFILE_FIELD_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const PROFILE_FIELD_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const FIELD_ICON_MARGIN_RIGHT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const FIELD_LABEL_MARGIN_BOTTOM = SCREEN_HEIGHT * 0.001; // 0.1% of screen height
+const PROFILE_NAME_MARGIN_BOTTOM = SCREEN_HEIGHT * 0.001; // 0.1% of screen height
+const PROFILE_EMAIL_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const AVATAR_CONTAINER_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const STAT_DIVIDER_WIDTH = SCREEN_WIDTH * 0.0026; // 0.26% of screen width
+const STAT_DIVIDER_HEIGHT = SCREEN_HEIGHT * 0.032; // 3.2% of screen height
+const STAT_DIVIDER_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SIGN_OUT_BUTTON_MARGIN_TOP = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SIGN_OUT_BUTTON_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MODAL_TITLE_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MODAL_INPUT_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MODAL_BUTTONS_GAP = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MODAL_BUTTON_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MODAL_INPUT_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MODAL_INPUT_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_BUTTON_PADDING = SCREEN_WIDTH * 0.025; // 2.5% of screen width
+const SCROLL_CONTENT_PADDING_BOTTOM = SCREEN_WIDTH * 0.05; // 5% of screen width
+const PROFILE_HEADER_MARGIN_TOP = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SECTION_MARGIN_BOTTOM = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_TITLE_PADDING_BOTTOM = SCREEN_WIDTH * 0.02; // 2% of screen width
 
 interface UserProfile {
   name: string;
@@ -435,57 +500,57 @@ const createStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + Spacing.md : Spacing.md,
+    paddingHorizontal: HEADER_PADDING_HORIZONTAL,
+    paddingVertical: HEADER_PADDING_VERTICAL,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + HEADER_PADDING_VERTICAL : HEADER_PADDING_VERTICAL,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
   },
   backButton: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: HEADER_BUTTON_PADDING,
+    borderRadius: HEADER_BUTTON_RADIUS,
     backgroundColor: theme.colors.surface,
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
   },
   headerAction: {
-    width: 44,
-    height: 44,
+    width: HEADER_BUTTON_SIZE,
+    height: HEADER_BUTTON_SIZE,
   },
   headerButton: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: HEADER_BUTTON_PADDING,
+    borderRadius: HEADER_BUTTON_RADIUS,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Spacing.xl,
+    paddingBottom: SCROLL_CONTENT_PADDING_BOTTOM,
   },
   profileHeader: {
     alignItems: 'center',
-    paddingVertical: Spacing.xl,
-    marginBottom: Spacing.lg,
-    marginHorizontal: Spacing.lg,
-    borderRadius: 16,
-    marginTop: Spacing.md,
+    paddingVertical: PROFILE_HEADER_PADDING_VERTICAL,
+    marginBottom: SECTION_MARGIN_BOTTOM,
+    marginHorizontal: PROFILE_HEADER_MARGIN_HORIZONTAL,
+    borderRadius: PROFILE_HEADER_BORDER_RADIUS,
+    marginTop: PROFILE_HEADER_MARGIN_TOP,
   },
   avatarContainer: {
     position: 'relative',
-    marginBottom: Spacing.md,
+    marginBottom: AVATAR_CONTAINER_MARGIN_BOTTOM,
   },
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    borderRadius: AVATAR_RADIUS,
   },
   avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    borderRadius: AVATAR_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -493,23 +558,23 @@ const createStyles = (theme: any) => StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: EDIT_AVATAR_BUTTON_SIZE,
+    height: EDIT_AVATAR_BUTTON_SIZE,
+    borderRadius: EDIT_AVATAR_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
     borderColor: 'white',
   },
   profileName: {
-    fontSize: Typography.fontSize['2xl'],
+    fontSize: PROFILE_NAME_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    marginBottom: Spacing.xs,
+    marginBottom: PROFILE_NAME_MARGIN_BOTTOM,
   },
   profileEmail: {
-    fontSize: Typography.fontSize.base,
+    fontSize: PROFILE_EMAIL_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
-    marginBottom: Spacing.lg,
+    marginBottom: PROFILE_EMAIL_MARGIN_BOTTOM,
   },
   profileStats: {
     flexDirection: 'row',
@@ -520,37 +585,38 @@ const createStyles = (theme: any) => StyleSheet.create({
     flex: 1,
   },
   statValue: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: STAT_VALUE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    marginBottom: Spacing.xs,
+    marginBottom: FIELD_LABEL_MARGIN_BOTTOM,
   },
   statLabel: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: STAT_LABEL_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
   },
   statDivider: {
-    width: 1,
-    height: 24,
-    marginHorizontal: Spacing.md,
+    width: STAT_DIVIDER_WIDTH,
+    height: STAT_DIVIDER_HEIGHT,
+    marginHorizontal: STAT_DIVIDER_MARGIN_HORIZONTAL,
   },
   section: {
-    marginHorizontal: Spacing.lg,
-    marginBottom: Spacing.lg,
-    borderRadius: 16,
+    marginHorizontal: SECTION_MARGIN_HORIZONTAL,
+    marginBottom: SECTION_MARGIN_BOTTOM,
+    borderRadius: SECTION_BORDER_RADIUS,
     overflow: 'hidden',
   },
   sectionTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: SECTION_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    padding: Spacing.lg,
-    paddingBottom: Spacing.md,
+    paddingVertical: SECTION_TITLE_PADDING_VERTICAL,
+    paddingHorizontal: SECTION_TITLE_PADDING_HORIZONTAL,
+    paddingBottom: SECTION_TITLE_PADDING_BOTTOM,
   },
   profileField: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
+    paddingHorizontal: PROFILE_FIELD_PADDING_HORIZONTAL,
+    paddingVertical: PROFILE_FIELD_PADDING_VERTICAL,
     borderBottomWidth: 1,
   },
   fieldContent: {
@@ -559,77 +625,77 @@ const createStyles = (theme: any) => StyleSheet.create({
     flex: 1,
   },
   fieldIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: FIELD_ICON_SIZE,
+    height: FIELD_ICON_SIZE,
+    borderRadius: FIELD_ICON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: Spacing.md,
+    marginRight: FIELD_ICON_MARGIN_RIGHT,
   },
   fieldText: {
     flex: 1,
   },
   fieldLabel: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: FIELD_LABEL_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
-    marginBottom: 2,
+    marginBottom: FIELD_LABEL_MARGIN_BOTTOM,
   },
   fieldValue: {
-    fontSize: Typography.fontSize.base,
+    fontSize: FIELD_VALUE_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
   },
   signOutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: Spacing.lg,
-    marginTop: Spacing.lg,
-    paddingVertical: Spacing.md,
-    borderRadius: 12,
+    marginHorizontal: SIGN_OUT_BUTTON_MARGIN_HORIZONTAL,
+    marginTop: SIGN_OUT_BUTTON_MARGIN_TOP,
+    paddingVertical: SIGN_OUT_BUTTON_PADDING_VERTICAL,
+    borderRadius: SIGN_OUT_BUTTON_BORDER_RADIUS,
   },
   signOutText: {
-    fontSize: Typography.fontSize.base,
+    fontSize: SIGN_OUT_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
-    marginLeft: Spacing.sm,
+    marginLeft: FIELD_ICON_MARGIN_RIGHT,
   },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: MODAL_OVERLAY_PADDING_HORIZONTAL,
   },
   modalContent: {
     width: '100%',
-    borderRadius: 16,
-    padding: Spacing.xl,
+    borderRadius: MODAL_CONTENT_BORDER_RADIUS,
+    padding: MODAL_CONTENT_PADDING,
   },
   modalTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: MODAL_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    marginBottom: Spacing.lg,
+    marginBottom: MODAL_TITLE_MARGIN_BOTTOM,
     textAlign: 'center',
   },
   modalInput: {
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.md,
-    fontSize: Typography.fontSize.base,
+    borderRadius: MODAL_CONTENT_BORDER_RADIUS,
+    paddingHorizontal: MODAL_INPUT_PADDING_HORIZONTAL,
+    paddingVertical: MODAL_INPUT_PADDING_VERTICAL,
+    fontSize: MODAL_INPUT_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
-    marginBottom: Spacing.lg,
+    marginBottom: MODAL_INPUT_MARGIN_BOTTOM,
   },
   modalButtons: {
     flexDirection: 'row',
-    gap: Spacing.md,
+    gap: MODAL_BUTTONS_GAP,
   },
   modalButton: {
     flex: 1,
-    paddingVertical: Spacing.md,
-    borderRadius: 12,
+    paddingVertical: MODAL_BUTTON_PADDING_VERTICAL,
+    borderRadius: MODAL_BUTTON_BORDER_RADIUS,
     alignItems: 'center',
   },
   modalButtonText: {
-    fontSize: Typography.fontSize.base,
+    fontSize: MODAL_BUTTON_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
   },
 });

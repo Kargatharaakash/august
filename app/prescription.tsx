@@ -11,6 +11,7 @@ import {
   Alert,
   Modal,
   Platform,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +30,50 @@ import { PrescriptionData, OCRResult } from '@/types';
 import { extractTextFromImage } from '@/services/ocr';
 import { parsePrescriptionText } from '@/services/groq';
 import { savePrescription } from '@/services/storage';
+
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const SUBTITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const STATUS_MESSAGE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const CARD_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const DATA_LABEL_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const DATA_VALUE_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const RAW_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const ARRAY_INDEX_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const RETRY_BUTTON_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const NEW_SCAN_BUTTON_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const CAMERA_PERMISSION_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const PERMISSION_BUTTON_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+
+const ACTION_BUTTON_SIZE = SCREEN_WIDTH * 0.13; // 13% of screen width
+const ACTION_BUTTON_RADIUS = ACTION_BUTTON_SIZE / 2;
+const PRIMARY_ACTION_BUTTON_SIZE = SCREEN_WIDTH * 0.13; // 13% of screen width
+const PRIMARY_ACTION_BUTTON_RADIUS = PRIMARY_ACTION_BUTTON_SIZE / 2;
+const SECONDARY_ACTION_BUTTON_SIZE = SCREEN_WIDTH * 0.13; // 13% of screen width
+const SECONDARY_ACTION_BUTTON_RADIUS = SECONDARY_ACTION_BUTTON_SIZE / 2;
+const ACTION_BUTTONS_CONTAINER_WIDTH = SCREEN_WIDTH * 0.35; // 35% of screen width
+const ACTION_BUTTONS_CONTAINER_HEIGHT = SCREEN_WIDTH * 0.15; // 15% of screen width
+const ACTION_BUTTONS_CONTAINER_RADIUS = ACTION_BUTTONS_CONTAINER_HEIGHT / 2;
+
+const CAPTURE_BUTTON_SIZE = SCREEN_WIDTH * 0.2; // 20% of screen width
+const CAPTURE_BUTTON_RADIUS = CAPTURE_BUTTON_SIZE / 2;
+const CAPTURE_BUTTON_OUTER_SIZE = SCREEN_WIDTH * 0.18; // 18% of screen width
+const CAPTURE_BUTTON_OUTER_RADIUS = CAPTURE_BUTTON_OUTER_SIZE / 2;
+const CAPTURE_BUTTON_INNER_SIZE = SCREEN_WIDTH * 0.15; // 15% of screen width
+const CAPTURE_BUTTON_INNER_RADIUS = CAPTURE_BUTTON_INNER_SIZE / 2;
+
+const CONTROL_BUTTON_SIZE = SCREEN_WIDTH * 0.11; // 11% of screen width
+const CONTROL_BUTTON_RADIUS = CONTROL_BUTTON_SIZE / 2;
+const CONTROL_BUTTON_INNER_SIZE = SCREEN_WIDTH * 0.09; // 9% of screen width
+const CONTROL_BUTTON_INNER_RADIUS = CONTROL_BUTTON_INNER_SIZE / 2;
+
+const IMAGE_PREVIEW_HEIGHT = SCREEN_HEIGHT * 0.4; // 40% of screen height
+const IMAGE_PREVIEW_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+
+const PLACEHOLDER_SIZE = SCREEN_WIDTH * 0.5; // 50% of screen width
 
 type ProcessingStatus = 'idle' | 'capturing' | 'processing' | 'analyzing' | 'complete' | 'error';
 
@@ -439,7 +484,7 @@ export default function PrescriptionScreen() {
       <View style={styles.container}>
         {processingStatus === 'idle' && (
           <View style={styles.headerContainer}>
-            <PrescriptionPlaceholder width={200} height={200} />
+            <PrescriptionPlaceholder width={PLACEHOLDER_SIZE} height={PLACEHOLDER_SIZE} />
             <Text style={styles.subtitle}>
               {t('prescription.subtitle')}
             </Text>
@@ -473,7 +518,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     width: '100%',
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
     marginVertical: Spacing.sm,
@@ -484,18 +529,18 @@ const getStyles = (theme: any) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
-    paddingBottom: Platform.OS === 'ios' ? 140 : 120,
+    paddingBottom: Platform.OS === 'ios' ? SCREEN_HEIGHT * 0.12 : SCREEN_HEIGHT * 0.1,
   },
   headerContainer: {
     alignItems: 'center',
     marginBottom: Spacing.xl,
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 200 : 180,
+    bottom: Platform.OS === 'ios' ? SCREEN_HEIGHT * 0.25 : SCREEN_HEIGHT * 0.22,
     left: Spacing.lg,
     right: Spacing.lg,
   },
   subtitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: SUBTITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
     textAlign: 'center',
@@ -504,7 +549,7 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   actionButtonsWrapper: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 50 : 30,
+    bottom: Platform.OS === 'ios' ? SCREEN_HEIGHT * 0.06 : SCREEN_HEIGHT * 0.04,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -515,9 +560,10 @@ const getStyles = (theme: any) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.colors.text.primary,
-    borderRadius: 35,
+    borderRadius: ACTION_BUTTONS_CONTAINER_RADIUS,
     padding: 12,
-    width: 140,
+    width: ACTION_BUTTONS_CONTAINER_WIDTH,
+    height: ACTION_BUTTONS_CONTAINER_HEIGHT,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -525,18 +571,18 @@ const getStyles = (theme: any) => StyleSheet.create({
     elevation: 6,
   },
   primaryActionButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: PRIMARY_ACTION_BUTTON_SIZE,
+    height: PRIMARY_ACTION_BUTTON_SIZE,
+    borderRadius: PRIMARY_ACTION_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 8,
     backgroundColor: theme.colors.primary[600],
   },
   secondaryActionButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: SECONDARY_ACTION_BUTTON_SIZE,
+    height: SECONDARY_ACTION_BUTTON_SIZE,
+    borderRadius: SECONDARY_ACTION_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 8,
@@ -558,7 +604,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     padding: Spacing.xl,
   },
   cameraPermissionText: {
-    fontSize: Typography.fontSize.base,
+    fontSize: CAMERA_PERMISSION_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.primary,
     textAlign: 'center',
@@ -566,7 +612,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   permissionButton: {
-    borderRadius: 12,
+    borderRadius: SCREEN_WIDTH * 0.03,
     shadowColor: theme.colors.primary[600],
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
@@ -578,12 +624,12 @@ const getStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.primary[600],
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
-    borderRadius: 12,
+    borderRadius: SCREEN_WIDTH * 0.03,
   },
   permissionButtonText: {
     color: theme.colors.text.inverse,
     fontFamily: Typography.fontFamily.semiBold,
-    fontSize: Typography.fontSize.base,
+    fontSize: PERMISSION_BUTTON_FONT_SIZE,
     fontWeight: '600',
     textAlign: 'center',
   },
@@ -596,21 +642,21 @@ const getStyles = (theme: any) => StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: Spacing.lg,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    paddingBottom: Platform.OS === 'ios' ? SCREEN_HEIGHT * 0.05 : SCREEN_HEIGHT * 0.03,
     paddingTop: Spacing.lg,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   captureButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: CAPTURE_BUTTON_SIZE,
+    height: CAPTURE_BUTTON_SIZE,
+    borderRadius: CAPTURE_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
   },
   captureButtonOuter: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: CAPTURE_BUTTON_OUTER_SIZE,
+    height: CAPTURE_BUTTON_OUTER_SIZE,
+    borderRadius: CAPTURE_BUTTON_OUTER_RADIUS,
     backgroundColor: 'rgba(255,255,255,0.9)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -620,9 +666,9 @@ const getStyles = (theme: any) => StyleSheet.create({
     shadowRadius: 6,
   },
   captureButtonInner: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    width: CAPTURE_BUTTON_INNER_SIZE,
+    height: CAPTURE_BUTTON_INNER_SIZE,
+    borderRadius: CAPTURE_BUTTON_INNER_RADIUS,
     backgroundColor: theme.colors.text.inverse,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -631,16 +677,16 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   closeButton: {
     padding: Spacing.sm,
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: CONTROL_BUTTON_SIZE,
+    height: CONTROL_BUTTON_SIZE,
+    borderRadius: CONTROL_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeButtonInner: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: CONTROL_BUTTON_INNER_SIZE,
+    height: CONTROL_BUTTON_INNER_SIZE,
+    borderRadius: CONTROL_BUTTON_INNER_RADIUS,
     backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -648,17 +694,17 @@ const getStyles = (theme: any) => StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.2)',
   },
   flipButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: CONTROL_BUTTON_SIZE,
+    height: CONTROL_BUTTON_SIZE,
+    borderRadius: CONTROL_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.sm,
   },
   flipButtonInner: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: CONTROL_BUTTON_INNER_SIZE,
+    height: CONTROL_BUTTON_INNER_SIZE,
+    borderRadius: CONTROL_BUTTON_INNER_RADIUS,
     backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -667,8 +713,8 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   imagePreviewContainer: {
     width: '100%',
-    height: 300,
-    borderRadius: 12,
+    height: IMAGE_PREVIEW_HEIGHT,
+    borderRadius: IMAGE_PREVIEW_RADIUS,
     overflow: 'hidden',
     marginBottom: Spacing.lg,
     shadowColor: '#000',
@@ -697,7 +743,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     marginBottom: Spacing.md,
   },
   statusMessage: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: STATUS_MESSAGE_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.primary,
     textAlign: 'center',
@@ -708,7 +754,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     borderRadius: 8,
   },
   retryButton: {
-    borderRadius: 12,
+    borderRadius: SCREEN_WIDTH * 0.03,
     marginTop: Spacing.md,
     shadowColor: theme.colors.primary[600],
     shadowOffset: { width: 0, height: 3 },
@@ -724,10 +770,11 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: SCREEN_WIDTH * 0.03,
   },
   retryButtonText: {
     color: theme.colors.text.inverse,
-    fontSize: Typography.fontSize.base,
+    fontSize: RETRY_BUTTON_FONT_SIZE,
     fontFamily: Typography.fontFamily.semiBold,
     fontWeight: '600',
   },
@@ -736,10 +783,10 @@ const getStyles = (theme: any) => StyleSheet.create({
     paddingHorizontal: Spacing.md,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: SCREEN_HEIGHT * 0.12,
   },
   newScanButton: {
-    borderRadius: 16,
+    borderRadius: SCREEN_WIDTH * 0.04,
     alignSelf: 'center',
     marginTop: Spacing.lg,
     marginBottom: Spacing.xl,
@@ -755,17 +802,17 @@ const getStyles = (theme: any) => StyleSheet.create({
     paddingVertical: Spacing.lg,
     paddingHorizontal: Spacing.xl,
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: SCREEN_WIDTH * 0.04,
   },
   newScanButtonText: {
     color: theme.colors.text.inverse,
-    fontSize: Typography.fontSize.base,
+    fontSize: NEW_SCAN_BUTTON_FONT_SIZE,
     fontFamily: Typography.fontFamily.semiBold,
     fontWeight: '600',
   },
   bottomScanButtonWrapper: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 50 : 30,
+    bottom: Platform.OS === 'ios' ? SCREEN_HEIGHT * 0.06 : SCREEN_HEIGHT * 0.04,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -773,7 +820,7 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   dynamicCard: {
     backgroundColor: theme.colors.surface,
-    borderRadius: 16,
+    borderRadius: SCREEN_WIDTH * 0.04,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
     shadowColor: theme.colors.shadow,
@@ -783,7 +830,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     elevation: 3,
   },
   cardTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: CARD_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
     marginBottom: Spacing.md,
@@ -793,41 +840,41 @@ const getStyles = (theme: any) => StyleSheet.create({
     paddingLeft: Spacing.sm,
   },
   dataLabel: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: DATA_LABEL_FONT_SIZE,
     fontFamily: Typography.fontFamily.semiBold,
     color: theme.colors.primary[600],
     marginBottom: 2,
   },
   dataValue: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: DATA_VALUE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.primary,
-    lineHeight: 20,
+    lineHeight: DATA_VALUE_FONT_SIZE * 1.4,
   },
   nestedData: {
     marginLeft: Spacing.md,
     marginTop: Spacing.xs,
     paddingLeft: Spacing.sm,
-    borderLeftWidth: 2,
+    borderLeftWidth: SCREEN_WIDTH * 0.005,
     borderLeftColor: theme.colors.primary[200],
   },
   arrayItem: {
     backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: 8,
+    borderRadius: SCREEN_WIDTH * 0.02,
     padding: Spacing.sm,
     marginBottom: Spacing.xs,
-    borderLeftWidth: 3,
+    borderLeftWidth: SCREEN_WIDTH * 0.008,
     borderLeftColor: theme.colors.primary[400],
   },
   arrayIndex: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: ARRAY_INDEX_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.primary[600],
     marginBottom: 4,
   },
   rawTextCard: {
     backgroundColor: theme.colors.surface,
-    borderRadius: 16,
+    borderRadius: SCREEN_WIDTH * 0.04,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
     shadowColor: theme.colors.shadow,
@@ -837,10 +884,10 @@ const getStyles = (theme: any) => StyleSheet.create({
     elevation: 3,
   },
   rawText: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: RAW_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
-    lineHeight: 16,
+    lineHeight: RAW_TEXT_FONT_SIZE * 1.4,
     backgroundColor: theme.colors.surfaceSecondary,
     padding: Spacing.sm,
     borderRadius: 8,

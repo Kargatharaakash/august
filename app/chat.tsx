@@ -36,6 +36,44 @@ import { Message, Chat, MessageAttachment } from '@/types';
 import { saveChat, getChats, deleteChat as deleteChatFromStorage } from '@/services/storage';
 import { sendChatMessage, convertImageToBase64 } from '@/services/groq';
 
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const MESSAGE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const MESSAGE_LINE_HEIGHT = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const INPUT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const NOTIFICATION_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.8; // 80% of screen width (max 300)
+const CHAT_HISTORY_PREVIEW_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const CHAT_HISTORY_DATE_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NEW_CHAT_BUTTON_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const ATTACHMENT_PREVIEW_SIZE = SCREEN_WIDTH * 0.15; // 15% of screen width
+const ATTACHMENT_PREVIEW_RADIUS = ATTACHMENT_PREVIEW_SIZE / 8;
+const REMOVE_ATTACHMENT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const REMOVE_ATTACHMENT_RADIUS = REMOVE_ATTACHMENT_SIZE / 2;
+const SCROLL_BUTTON_SIZE = SCREEN_WIDTH * 0.1; // 10% of screen width
+const SCROLL_BUTTON_RADIUS = SCROLL_BUTTON_SIZE / 2;
+const ACTION_BUTTON_SIZE = SCREEN_WIDTH * 0.07; // 7% of screen width
+const ACTION_BUTTON_RADIUS = ACTION_BUTTON_SIZE / 2;
+const SEND_BUTTON_SIZE = SCREEN_WIDTH * 0.1; // 10% of screen width
+const SEND_BUTTON_RADIUS = SEND_BUTTON_SIZE / 2;
+const ATTACH_BUTTON_SIZE = SCREEN_WIDTH * 0.08; // 8% of screen width
+const ATTACH_BUTTON_RADIUS = ATTACH_BUTTON_SIZE / 2;
+const INPUT_CONTAINER_MIN_HEIGHT = SCREEN_WIDTH * 0.14; // 14% of screen width
+const INPUT_CONTAINER_RADIUS = INPUT_CONTAINER_MIN_HEIGHT / 2;
+const MESSAGE_BUBBLE_RADIUS = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const USER_BUBBLE_RADIUS_CORNER = SCREEN_WIDTH * 0.01; // 1% of screen width
+const ASSISTANT_BUBBLE_RADIUS_CORNER = SCREEN_WIDTH * 0.01; // 1% of screen width
+const ATTACHMENT_IMAGE_WIDTH = SCREEN_WIDTH * 0.75; // 75% of screen width
+const ATTACHMENT_IMAGE_HEIGHT = SCREEN_WIDTH * 0.53; // 53% of screen width
+const ATTACHMENT_IMAGE_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const CHAT_HISTORY_ICON_SIZE = SCREEN_WIDTH * 0.08; // 8% of screen width
+const CHAT_HISTORY_ICON_RADIUS = CHAT_HISTORY_ICON_SIZE / 2;
+const SIDEBAR_HEADER_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const SIDEBAR_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.05; // 5% of screen width
+
 export default function ChatScreen() {
   const router = useRouter();
   const { theme } = useTheme();
@@ -65,7 +103,7 @@ export default function ChatScreen() {
   const inputRef = useRef<TextInput>(null);
   const typingAnimation = useRef<NodeJS.Timeout | null>(null);
   const notificationAnimatedValue = useRef(new Animated.Value(-100)).current;
-  const sidebarAnimatedValue = useRef(new Animated.Value(-300)).current;
+  const sidebarAnimatedValue = useRef(new Animated.Value(-SIDEBAR_WIDTH)).current;
   const dot1Animation = useRef(new Animated.Value(0)).current;
   const dot2Animation = useRef(new Animated.Value(0)).current;
   const dot3Animation = useRef(new Animated.Value(0)).current;
@@ -508,7 +546,7 @@ export default function ChatScreen() {
   };
 
   const toggleSidebar = () => {
-    const toValue = showSidebar ? -300 : 0;
+    const toValue = showSidebar ? -SIDEBAR_WIDTH : 0;
     
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     
@@ -591,8 +629,8 @@ export default function ChatScreen() {
     // Define markdown styles
     const markdownStyles = {
       text: {
-        fontSize: Typography.fontSize.base,
-        lineHeight: 22,
+        fontSize: MESSAGE_FONT_SIZE,
+        lineHeight: MESSAGE_LINE_HEIGHT,
         fontFamily: Typography.fontFamily.regular,
         color: isUser ? theme.colors.text.inverse : theme.colors.text.primary,
       },
@@ -605,17 +643,17 @@ export default function ChatScreen() {
         fontStyle: 'italic' as 'italic',
       },
       heading1: {
-        fontSize: Typography.fontSize.xl,
+        fontSize: MESSAGE_FONT_SIZE * 1.5,
         fontFamily: Typography.fontFamily.bold,
         marginVertical: 10,
       },
       heading2: {
-        fontSize: Typography.fontSize.lg,
+        fontSize: MESSAGE_FONT_SIZE * 1.3,
         fontFamily: Typography.fontFamily.bold,
         marginVertical: 8,
       },
       heading3: {
-        fontSize: Typography.fontSize.base,
+        fontSize: MESSAGE_FONT_SIZE * 1.1,
         fontFamily: Typography.fontFamily.bold,
         marginVertical: 6,
       },
@@ -654,7 +692,7 @@ export default function ChatScreen() {
           ]}>
             {isTyping ? (
               <View style={styles.typingContainer}>
-                <Text style={styles.messageText}>{typingText}</Text>
+                <Text style={[styles.messageText, { fontSize: MESSAGE_FONT_SIZE, lineHeight: MESSAGE_LINE_HEIGHT }]}>{typingText}</Text>
                 <View style={styles.typingDots}>
                   <Animated.View 
                     style={[styles.dot, styles.dot1, { 
@@ -1059,7 +1097,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.primary[50],
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
   },
@@ -1086,32 +1124,32 @@ const getStyles = (theme: any) => StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   attachmentImage: {
-    width: 280,
-    height: 200,
-    borderRadius: 12,
+    width: ATTACHMENT_IMAGE_WIDTH,
+    height: ATTACHMENT_IMAGE_HEIGHT,
+    borderRadius: ATTACHMENT_IMAGE_RADIUS,
     marginBottom: Spacing.xs,
   },
   messageBubble: {
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
-    borderRadius: 18,
+    borderRadius: MESSAGE_BUBBLE_RADIUS,
   },
   userBubble: {
     backgroundColor: theme.colors.primary[500],
-    borderBottomRightRadius: 4,
+    borderBottomRightRadius: USER_BUBBLE_RADIUS_CORNER,
     maxWidth: '85%',
     alignSelf: 'flex-end',
   },
   assistantBubble: {
     backgroundColor: theme.colors.surface,
-    borderBottomLeftRadius: 4,
+    borderBottomLeftRadius: ASSISTANT_BUBBLE_RADIUS_CORNER,
     borderWidth: 1,
     borderColor: theme.colors.border,
     width: '100%',
   },
   messageText: {
-    fontSize: Typography.fontSize.base,
-    lineHeight: 22,
+    fontSize: MESSAGE_FONT_SIZE,
+    lineHeight: MESSAGE_LINE_HEIGHT,
     fontFamily: Typography.fontFamily.regular,
   },
   userText: {
@@ -1158,8 +1196,12 @@ const getStyles = (theme: any) => StyleSheet.create({
   actionButton: {
     padding: Spacing.xs,
     marginRight: Spacing.sm,
-    borderRadius: 8,
+    borderRadius: ACTION_BUTTON_RADIUS,
     backgroundColor: 'transparent',
+    width: ACTION_BUTTON_SIZE,
+    height: ACTION_BUTTON_SIZE,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actionButtonActive: {
     backgroundColor: theme.colors.primary[50],
@@ -1173,9 +1215,9 @@ const getStyles = (theme: any) => StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 120,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: SCROLL_BUTTON_SIZE,
+    height: SCROLL_BUTTON_SIZE,
+    borderRadius: SCROLL_BUTTON_RADIUS,
     backgroundColor: theme.colors.primary[500],
     justifyContent: 'center',
     alignItems: 'center',
@@ -1198,12 +1240,12 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     backgroundColor: theme.mode === 'dark' ? theme.colors.surface : 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 28,
+    borderRadius: INPUT_CONTAINER_RADIUS,
     borderWidth: 2,
     borderColor: theme.colors.primary[200],
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
-    minHeight: 56,
+    minHeight: INPUT_CONTAINER_MIN_HEIGHT,
     shadowColor: theme.colors.primary[500],
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -1214,12 +1256,16 @@ const getStyles = (theme: any) => StyleSheet.create({
     padding: Spacing.sm,
     marginRight: Spacing.sm,
     alignSelf: 'center',
-    borderRadius: 20,
+    borderRadius: ATTACH_BUTTON_RADIUS,
     backgroundColor: theme.colors.primary[50],
+    width: ATTACH_BUTTON_SIZE,
+    height: ATTACH_BUTTON_SIZE,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   input: {
     flex: 1,
-    fontSize: Typography.fontSize.base,
+    fontSize: INPUT_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.primary,
     maxHeight: 120,
@@ -1229,9 +1275,9 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   sendButton: {
     backgroundColor: theme.colors.primary[500],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: SEND_BUTTON_SIZE,
+    height: SEND_BUTTON_SIZE,
+    borderRadius: SEND_BUTTON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: Spacing.sm,
@@ -1252,11 +1298,11 @@ const getStyles = (theme: any) => StyleSheet.create({
     paddingBottom: Spacing.sm,
   },
   attachmentPreview: {
-    width: 60,
-    height: 60,
+    width: ATTACHMENT_PREVIEW_SIZE,
+    height: ATTACHMENT_PREVIEW_SIZE,
     marginRight: Spacing.sm,
     marginBottom: Spacing.sm,
-    borderRadius: 8,
+    borderRadius: ATTACHMENT_PREVIEW_RADIUS,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -1269,15 +1315,15 @@ const getStyles = (theme: any) => StyleSheet.create({
     top: 2,
     right: 2,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    width: REMOVE_ATTACHMENT_SIZE,
+    height: REMOVE_ATTACHMENT_SIZE,
+    borderRadius: REMOVE_ATTACHMENT_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
   },
   removeAttachmentText: {
     color: theme.colors.text.inverse,
-    fontSize: 12,
+    fontSize: REMOVE_ATTACHMENT_SIZE * 0.6,
     fontWeight: 'bold',
   },
   notificationContainer: {
@@ -1296,7 +1342,7 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   notificationText: {
     color: theme.colors.text.inverse,
-    fontSize: Typography.fontSize.sm,
+    fontSize: NOTIFICATION_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     textAlign: 'center',
   },
@@ -1306,7 +1352,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    width: 300,
+    width: SIDEBAR_WIDTH,
     zIndex: 999,
     elevation: 999,
   },
@@ -1338,7 +1384,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     borderBottomColor: theme.colors.border,
   },
   sidebarTitle: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: SIDEBAR_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
   },
@@ -1372,9 +1418,9 @@ const getStyles = (theme: any) => StyleSheet.create({
     alignItems: 'center',
   },
   chatHistoryIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: CHAT_HISTORY_ICON_SIZE,
+    height: CHAT_HISTORY_ICON_SIZE,
+    borderRadius: CHAT_HISTORY_ICON_RADIUS,
     backgroundColor: theme.colors.primary[100],
     justifyContent: 'center',
     alignItems: 'center',
@@ -1384,7 +1430,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     flex: 1,
   },
   chatHistoryPreview: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: CHAT_HISTORY_PREVIEW_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.primary,
     marginBottom: Spacing.xs,
@@ -1393,7 +1439,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     color: theme.colors.primary[600],
   },
   chatHistoryDate: {
-    fontSize: Typography.fontSize.xs,
+    fontSize: CHAT_HISTORY_DATE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
@@ -1444,7 +1490,7 @@ const getStyles = (theme: any) => StyleSheet.create({
     elevation: 6,
   },
   newChatButtonText: {
-    fontSize: Typography.fontSize.base,
+    fontSize: NEW_CHAT_BUTTON_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.inverse,
     marginLeft: Spacing.sm,

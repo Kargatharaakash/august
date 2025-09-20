@@ -21,6 +21,21 @@ import Spacing from '@/constants/Spacing';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+// Responsive sizing calculations
+const TITLE_FONT_SIZE = SCREEN_WIDTH * 0.13;
+const TITLE_LINE_HEIGHT = TITLE_FONT_SIZE * 1.1;
+const SUBTITLE_FONT_SIZE = SCREEN_WIDTH * 0.042;
+const SUBTITLE_LINE_HEIGHT = SUBTITLE_FONT_SIZE * 1.3;
+const DESCRIPTION_FONT_SIZE = SCREEN_WIDTH * 0.042;
+const DESCRIPTION_LINE_HEIGHT = DESCRIPTION_FONT_SIZE * 1.3;
+const BUTTON_FONT_SIZE = Math.min(SCREEN_WIDTH * 0.045, 18); // Cap font size for better visibility
+const BUTTON_PADDING_VERTICAL = SCREEN_HEIGHT * 0.025;
+const BUTTON_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.08;
+const IMAGE_CONTAINER_HEIGHT = SCREEN_HEIGHT * 0.3;
+const CONTENT_HORIZONTAL_PADDING = SCREEN_WIDTH * 0.08;
+const CONTENT_TOP_PADDING = SCREEN_HEIGHT * 0.12;
+const CONTENT_BOTTOM_PADDING = SCREEN_HEIGHT * 0.05;
+
 interface OnboardingSlide {
   id: number;
   title: string;
@@ -89,8 +104,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     }
   };
 
-
-
   const handleContinue = () => {
     if (currentIndex < onboardingData.length - 1) {
       // Navigate to next screen
@@ -145,7 +158,18 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 style={[styles.primaryButton, { backgroundColor: slide.textColor }]}
                 onPress={isLastSlide ? handleGetStarted : handleContinue}
               >
-                <Text style={[styles.primaryButtonText, { color: slide.backgroundColor }]}>
+                <Text 
+                  style={[
+                    styles.primaryButtonText, 
+                    { 
+                      color: slide.backgroundColor,
+                      textShadowColor: slide.textColor === '#2D2D2D' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)',
+                      textShadowOffset: { width: 0, height: 1 },
+                      textShadowRadius: 2
+                    }
+                  ]}
+                  numberOfLines={1}
+                >
                   {isLastSlide ? 'Start Using August AI' : 'Continue'}
                 </Text>
               </TouchableOpacity>
@@ -191,13 +215,13 @@ const styles = StyleSheet.create({
   },
   slideContainer: {
     flex: 1,
-    paddingHorizontal: 32,
+    paddingHorizontal: CONTENT_HORIZONTAL_PADDING,
   },
   decorativeLines: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 60 : 40,
-    left: 32,
-    right: 32,
+    top: Platform.OS === 'ios' ? SCREEN_HEIGHT * 0.08 : SCREEN_HEIGHT * 0.06,
+    left: CONTENT_HORIZONTAL_PADDING,
+    right: CONTENT_HORIZONTAL_PADDING,
     zIndex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -213,75 +237,72 @@ const styles = StyleSheet.create({
   progressLine3: {},
   content: {
     flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 100 : 80,
-    paddingBottom: 40,
+    paddingTop: CONTENT_TOP_PADDING,
+    paddingBottom: CONTENT_BOTTOM_PADDING,
   },
   title: {
-    fontSize: 56,
+    fontSize: TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    lineHeight: 60,
+    lineHeight: TITLE_LINE_HEIGHT,
     letterSpacing: -2,
-    marginBottom: 40,
+    marginBottom: SCREEN_HEIGHT * 0.04,
   },
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 15,
+    marginVertical: SCREEN_HEIGHT * 0.02,
     flex: 0,
-    height: 260,
+    height: IMAGE_CONTAINER_HEIGHT,
     width: '100%',
   },
   image: {
     width: '100%',
     height: '100%',
-    maxWidth: 360,
-    maxHeight: 260,
+    maxWidth: SCREEN_WIDTH * 0.85,
+    maxHeight: SCREEN_HEIGHT * 0.3,
   },
   textContent: {
-    marginBottom: 20,
-    marginTop: 20,
+    marginBottom: SCREEN_HEIGHT * 0.02,
+    marginTop: SCREEN_HEIGHT * 0.02,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: SUBTITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.semiBold,
-    lineHeight: 24,
-    marginBottom: 10,
+    lineHeight: SUBTITLE_LINE_HEIGHT,
+    marginBottom: SCREEN_HEIGHT * 0.01,
   },
   description: {
-    fontSize: 18,
+    fontSize: DESCRIPTION_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
-    lineHeight: 24,
+    lineHeight: DESCRIPTION_LINE_HEIGHT,
     opacity: 0.8,
   },
   bottomSection: {
-    paddingBottom: '5%',
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: '8%',
     paddingTop: '15%'
   },
   primaryButton: {
-    paddingVertical: 18,
-    paddingHorizontal: 32,
+    paddingVertical: BUTTON_PADDING_VERTICAL,
+    paddingHorizontal: BUTTON_PADDING_HORIZONTAL,
     borderRadius: 32,
     alignItems: 'center',
-    marginBottom: 16,
+    justifyContent: 'center',
+    marginBottom: SCREEN_HEIGHT * 0.02,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
+    minHeight: SCREEN_HEIGHT * 0.07,
+    minWidth: SCREEN_WIDTH * 0.45,
   },
   primaryButtonText: {
-    fontSize: 16,
+    fontSize: BUTTON_FONT_SIZE,
     fontFamily: Typography.fontFamily.semiBold,
-    fontWeight: '600',
-  },
-  skipButtonBottom: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-  },
-  skipButtonText: {
-    fontSize: 16,
-    fontFamily: Typography.fontFamily.medium,
-    opacity: 0.7,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    lineHeight: BUTTON_FONT_SIZE * 1.2,
   },
 });

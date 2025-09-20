@@ -20,9 +20,35 @@ import Spacing from '@/constants/Spacing';
 import { fetchHealthTips } from '@/services/groq';
 import { storeData, getData } from '@/services/storage';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH; // 25% of screen width for swipe
 const SWIPE_OUT_DURATION = 250;
+
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const CATEGORY_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const CARD_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.045; // 4.5% of screen width
+const CARD_CONTENT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const CARD_CONTENT_LINE_HEIGHT = SCREEN_WIDTH * 0.06; // 6% of screen width
+const CARD_COUNTER_FONT_SIZE = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NAV_BUTTON_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const RETRY_BUTTON_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const LOADING_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const ERROR_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const EMPTY_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const SWIPE_HINT_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+
+const CARD_WRAPPER_WIDTH = SCREEN_WIDTH - Spacing.xl * 2;
+const CARD_WRAPPER_HEIGHT = SCREEN_HEIGHT * 0.4; // 40% of screen height
+const CARD_BORDER_RADIUS = SCREEN_WIDTH * 0.05; // 5% of screen width
+const CATEGORY_BADGE_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const NAV_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const RETRY_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const MIN_NAV_BUTTON_WIDTH = SCREEN_WIDTH * 0.3; // 30% of screen width
+const NAV_BUTTON_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.06; // 6% of screen width
+const NAV_BUTTON_PADDING_VERTICAL = SCREEN_HEIGHT * 0.02; // 2% of screen height
 
 interface HealthTip {
   id: number;
@@ -464,10 +490,10 @@ const getStyles = (theme: any) => StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
     backgroundColor: theme.colors.background,
-    marginTop: Platform.OS === 'android' ? 24 : 0, // Fixed status bar height for Android
+    marginTop: Platform.OS === 'android' ? SCREEN_HEIGHT * 0.04 : 0, // Responsive status bar height for Android (4% of screen height)
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
     marginVertical: Spacing.sm,
@@ -479,14 +505,14 @@ const getStyles = (theme: any) => StyleSheet.create({
     paddingHorizontal: Spacing.md,
   },
   cardWrapper: {
-    width: SCREEN_WIDTH - Spacing.xl * 2,
-    height: 400,
+    width: CARD_WRAPPER_WIDTH,
+    height: CARD_WRAPPER_HEIGHT,
     position: 'relative',
   },
   card: {
     width: '100%',
     height: '100%',
-    borderRadius: 20,
+    borderRadius: CARD_BORDER_RADIUS,
     padding: Spacing.lg,
     shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 10 },
@@ -504,25 +530,25 @@ const getStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.primary[100],
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xs / 2,
-    borderRadius: 12,
+    borderRadius: CATEGORY_BADGE_BORDER_RADIUS,
   },
   categoryText: {
     fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.xs,
+    fontSize: CATEGORY_TEXT_FONT_SIZE,
     color: theme.colors.primary[600],
   },
   cardTitle: {
     fontFamily: Typography.fontFamily.bold,
-    fontSize: Typography.fontSize.lg,
+    fontSize: CARD_TITLE_FONT_SIZE,
     color: theme.colors.text.primary,
     marginBottom: Spacing.md,
     marginTop: Spacing.lg,
   },
   cardContent: {
     fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.base,
+    fontSize: CARD_CONTENT_FONT_SIZE,
     color: theme.colors.text.secondary,
-    lineHeight: 24,
+    lineHeight: CARD_CONTENT_LINE_HEIGHT,
   },
   cardFooter: {
     position: 'absolute',
@@ -531,26 +557,26 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   cardCounter: {
     fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.xs,
+    fontSize: CARD_COUNTER_FONT_SIZE,
     color: theme.colors.text.tertiary,
   },
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.xl,
-    paddingBottom: Spacing.xl + 60, // Extra padding for tab bar
+    paddingBottom: Spacing.xl + (SCREEN_HEIGHT * 0.08), // Extra padding for tab bar (8% of screen height)
   },
   navButton: {
     backgroundColor: theme.colors.primary[500],
-    paddingHorizontal: Spacing.xl,
-    paddingVertical: Spacing.md,
-    borderRadius: 12,
-    minWidth: 150,
+    paddingHorizontal: NAV_BUTTON_PADDING_HORIZONTAL,
+    paddingVertical: NAV_BUTTON_PADDING_VERTICAL,
+    borderRadius: NAV_BUTTON_BORDER_RADIUS,
+    minWidth: MIN_NAV_BUTTON_WIDTH,
     alignItems: 'center',
   },
   navButtonText: {
     fontFamily: Typography.fontFamily.semiBold,
-    fontSize: Typography.fontSize.sm,
+    fontSize: NAV_BUTTON_TEXT_FONT_SIZE,
     color: theme.colors.text.inverse,
   },
   disabledButton: {
@@ -563,7 +589,7 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   loadingText: {
     fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.sm,
+    fontSize: LOADING_TEXT_FONT_SIZE,
     color: theme.colors.text.secondary,
     marginTop: Spacing.md,
   },
@@ -575,7 +601,7 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   errorText: {
     fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.sm,
+    fontSize: ERROR_TEXT_FONT_SIZE,
     color: theme.colors.error,
     textAlign: 'center',
     marginBottom: Spacing.md,
@@ -584,11 +610,11 @@ const getStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.primary[500],
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
-    borderRadius: 12,
+    borderRadius: RETRY_BUTTON_BORDER_RADIUS,
   },
   retryButtonText: {
     fontFamily: Typography.fontFamily.semiBold,
-    fontSize: Typography.fontSize.sm,
+    fontSize: RETRY_BUTTON_TEXT_FONT_SIZE,
     color: theme.colors.text.inverse,
   },
   emptyContainer: {
@@ -599,19 +625,19 @@ const getStyles = (theme: any) => StyleSheet.create({
   },
   emptyText: {
     fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.base,
+    fontSize: EMPTY_TEXT_FONT_SIZE,
     color: theme.colors.text.secondary,
     textAlign: 'center',
   },
   swipeHintContainer: {
     position: 'absolute',
-    bottom: -40,
+    bottom: SCREEN_HEIGHT * -0.05, // 5% of screen height
     width: '100%',
     alignItems: 'center',
   },
   swipeHintText: {
     fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.sm,
+    fontSize: SWIPE_HINT_TEXT_FONT_SIZE,
     color: theme.colors.text.tertiary,
   },
 });

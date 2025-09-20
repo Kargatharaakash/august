@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import {
   View,
@@ -12,6 +10,7 @@ import {
   Switch,
   Alert,
   Linking,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -24,6 +23,42 @@ import { getSupportedLanguages, changeLanguage, getCurrentLanguage } from '@/i18
 import Typography from '@/constants/Typography';
 import Spacing from '@/constants/Spacing';
 import Icons from '@/constants/Icons';
+
+// Get screen dimensions for responsive design
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Responsive sizing calculations
+const HEADER_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.055; // 5.5% of screen width
+const SECTION_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const SETTING_TITLE_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+const SETTING_SUBTITLE_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const SETTING_VALUE_FONT_SIZE = SCREEN_WIDTH * 0.035; // 3.5% of screen width
+const LOGOUT_TEXT_FONT_SIZE = SCREEN_WIDTH * 0.04; // 4% of screen width
+
+const SETTING_ICON_SIZE = SCREEN_WIDTH * 0.104; // 10.4% of screen width
+const SETTING_ICON_RADIUS = SETTING_ICON_SIZE / 2;
+const BACK_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_ACTION_SIZE = SCREEN_WIDTH * 0.115; // 11.5% of screen width
+const SETTING_SECTION_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const LOGOUT_BUTTON_BORDER_RADIUS = SCREEN_WIDTH * 0.04; // 4% of screen width
+const HEADER_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const HEADER_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_TITLE_MARGIN_BOTTOM = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SECTION_TITLE_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_CONTENT_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_CONTENT_MARGIN_BOTTOM = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SETTING_ITEM_PADDING_VERTICAL = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SETTING_ITEM_PADDING_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SETTING_ICON_MARGIN_RIGHT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const SETTING_TITLE_MARGIN_BOTTOM = SCREEN_HEIGHT * 0.001; // 0.1% of screen height
+const SETTING_VALUE_MARGIN_RIGHT = SCREEN_WIDTH * 0.03; // 3% of screen width
+const LOGOUT_BUTTON_MARGIN_HORIZONTAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const LOGOUT_BUTTON_MARGIN_TOP = SCREEN_WIDTH * 0.05; // 5% of screen width
+const LOGOUT_BUTTON_PADDING_VERTICAL = SCREEN_WIDTH * 0.05; // 5% of screen width
+const BACK_BUTTON_PADDING = SCREEN_WIDTH * 0.025; // 2.5% of screen width
+const SCROLL_CONTENT_PADDING_BOTTOM = SCREEN_WIDTH * 0.05; // 5% of screen width
+const FOOTER_HEIGHT = SCREEN_WIDTH * 0.05; // 5% of screen width
+const SECTION_TITLE_LETTER_SPACING = SCREEN_WIDTH * 0.0013; // 0.13% of screen width
 
 interface SettingItemProps {
   icon: any;
@@ -390,48 +425,48 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + Spacing.md : Spacing.md,
+    paddingHorizontal: HEADER_PADDING_HORIZONTAL,
+    paddingVertical: HEADER_PADDING_VERTICAL,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + HEADER_PADDING_VERTICAL : HEADER_PADDING_VERTICAL,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
   },
   backButton: {
-    padding: Spacing.sm,
-    borderRadius: 12,
+    padding: BACK_BUTTON_PADDING,
+    borderRadius: BACK_BUTTON_BORDER_RADIUS,
     backgroundColor: theme.colors.surface,
   },
   headerTitle: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: HEADER_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
   },
   headerAction: {
-    width: 44,
-    height: 44,
+    width: HEADER_ACTION_SIZE,
+    height: HEADER_ACTION_SIZE,
   },
   content: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Spacing.xl,
+    paddingBottom: SCROLL_CONTENT_PADDING_BOTTOM,
   },
   settingSection: {
-    marginBottom: Spacing.lg,
+    marginBottom: SECTION_CONTENT_MARGIN_BOTTOM,
   },
   sectionTitle: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: SECTION_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.secondary,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: Spacing.sm,
-    marginHorizontal: Spacing.lg,
+    letterSpacing: SECTION_TITLE_LETTER_SPACING,
+    marginBottom: SECTION_TITLE_MARGIN_BOTTOM,
+    marginHorizontal: SECTION_TITLE_MARGIN_HORIZONTAL,
   },
   sectionContent: {
     backgroundColor: theme.colors.surface,
-    marginHorizontal: Spacing.lg,
-    borderRadius: 16,
+    marginHorizontal: SECTION_CONTENT_MARGIN_HORIZONTAL,
+    borderRadius: SETTING_SECTION_BORDER_RADIUS,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: theme.colors.border,
@@ -440,8 +475,8 @@ const getStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
+    paddingHorizontal: SETTING_ITEM_PADDING_HORIZONTAL,
+    paddingVertical: SETTING_ITEM_PADDING_VERTICAL,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
   },
@@ -451,24 +486,24 @@ const getStyles = (theme: any) => StyleSheet.create({
     flex: 1,
   },
   settingIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: SETTING_ICON_SIZE,
+    height: SETTING_ICON_SIZE,
+    borderRadius: SETTING_ICON_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: Spacing.md,
+    marginRight: SETTING_ICON_MARGIN_RIGHT,
   },
   settingContent: {
     flex: 1,
   },
   settingTitle: {
-    fontSize: Typography.fontSize.base,
+    fontSize: SETTING_TITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
     color: theme.colors.text.primary,
-    marginBottom: 2,
+    marginBottom: SETTING_TITLE_MARGIN_BOTTOM,
   },
   settingSubtitle: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: SETTING_SUBTITLE_FONT_SIZE,
     fontFamily: Typography.fontFamily.regular,
     color: theme.colors.text.secondary,
   },
@@ -477,29 +512,29 @@ const getStyles = (theme: any) => StyleSheet.create({
     alignItems: 'center',
   },
   settingValue: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: SETTING_VALUE_FONT_SIZE,
     fontFamily: Typography.fontFamily.medium,
     color: theme.colors.text.secondary,
-    marginRight: Spacing.sm,
+    marginRight: SETTING_VALUE_MARGIN_RIGHT,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.surface,
-    marginHorizontal: Spacing.lg,
-    borderRadius: 16,
-    paddingVertical: Spacing.lg,
+    marginHorizontal: LOGOUT_BUTTON_MARGIN_HORIZONTAL,
+    borderRadius: LOGOUT_BUTTON_BORDER_RADIUS,
+    paddingVertical: LOGOUT_BUTTON_PADDING_VERTICAL,
     borderWidth: 1,
     borderColor: theme.colors.error + '20',
-    marginTop: Spacing.lg,
+    marginTop: LOGOUT_BUTTON_MARGIN_TOP,
   },
   logoutText: {
-    fontSize: Typography.fontSize.base,
+    fontSize: LOGOUT_TEXT_FONT_SIZE,
     fontFamily: Typography.fontFamily.bold,
-    marginLeft: Spacing.sm,
+    marginLeft: SETTING_ICON_MARGIN_RIGHT,
   },
   footer: {
-    height: Spacing.xl,
+    height: FOOTER_HEIGHT,
   },
 });
